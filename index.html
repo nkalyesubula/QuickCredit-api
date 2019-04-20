@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quick Credit</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/login.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>Quick Credit</h1>
+  <p><i>"Quick Credit is an online lending platform that provides short term soft loans to individuals.
+       This helps solve problems of financial inclusion as a way to alleviate poverty and empower low
+       income earners."</i></p>
+</div>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+  <a href="#">Home</a>
+  <a href="#">About</a>
+  <a href="#">Contact Us</a>
+</div>
+
+<!-- The flexible grid (content) -->
+<div class="row">
+  <div class="main">
+      
+      <div class="form">
+        <div class="head" class="signup">
+          <div onclick="swap(this);" data-tab="login" class="login-tab" >
+            LOGIN
+          </div>
+          <div onclick="swap(this);" data-tab="signup" class="signup-tab">
+            SIGNUP
+          </div>
+        </div>
+        <div class="body" id="form-body">
+            <div class="login">
+              <div class="form-row">
+               
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button onclick="loginUser()">LOGIN</button>
+              </div>
+            </div>
+            <div class="signup">
+              <div class="form-row">
+                    <input type="text"  id="firstname" placeholder="First Name" required>
+                    <input type="text"  id="lastname" placeholder="Last Name" required>
+                    <input type="email"  id="r_email" placeholder="Email" required>
+                    <input type="password" id="r_password" placeholder="Password" required>
+                    <input type="password" id="r_password" placeholder="Confirm Password" required>
+                    <button onclick="RegisterUser()">SIGNUP</button>
+              </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+<script src="js/login.js"></script>
+</body>
+</html>
