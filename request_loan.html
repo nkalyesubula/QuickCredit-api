@@ -11,7 +11,7 @@
 <!-- Navigation Bar -->
 <div class="navbar">
   <a href="#"><b>Quick Credit</b></a>
-  <a href="index.html" id="logout">LogOut</a>
+  <a href="index.html">LogOut</a>
 </div>
 
 <!-- The flexible grid (content) -->
@@ -35,26 +35,63 @@
                     <td role="cell">1</td>
                     <td role="cell">14-April-2019 11:12 AM </td>
                     <td role="cell">40,000</td>
-                    <td role="cell">60,000</td>
+                    <td role="cell">0</td>
                 </tr>
                 <tr role="row">
                     <td role="cell">2</td>
                     <td role="cell">10-April-2019 11:12 AM </td>
+                    <td role="cell">20,000</td>
                     <td role="cell">40,000</td>
-                    <td role="cell">100,000</td>
                 </tr>
               </tbody>
             </table>
+    <!-- LOAN REQUEST MODAL -->
     
+    <div id="LoanModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+              <h3>Apply For A Loan<span class="closeBtn">&times;</span></h3>
+        </div>
+        <div class="modal-body">
+          <form class="modal_elements">
+            <label for="title">Amount</label>
+            <input type="number" min="1" name="amount" placeholder="Enter Amount" required>
+            <label for="title">Tenor</label>
+            <select>
+                <option value="">**Select**</option>
+              <option value="1">1 Month</option>
+              <option value="2">2 Months</option>
+              <option value="3">3 Months</option>
+              <option value="4">4 Months</option>
+              <option value="5">5 Months</option>
+              <option value="6">6 Months</option>
+              <option value="7">7 Months</option>
+              <option value="8">8 Months</option>
+              <option value="9">9 Months</option>
+              <option value="10">10 Months</option>
+              <option value="11">11 Months</option>
+              <option value="12">12 Months</option>
+
+          
+        
+            <div id="submit">
+                  <input type="submit"  value="Submit Loan Request" id="submitBtn">
+            </div>
+            
+          </form>
+
+        </div>
+        <div>
+          
+        </div>
+      </div>
+
+    </div>
+    <!-- END LOAN REQUEST MODAL -->
        
   </div>
-
-
-      
-    
-
-
-
 
 </div>
 
@@ -62,5 +99,6 @@
 <div class="footer">
         <h5>&copy; Quick Credit 2019</h5>
 </div>
+<script src="js/MyModal.js"></script>
 </body>
 </html>

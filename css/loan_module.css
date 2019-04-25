@@ -76,7 +76,10 @@ button{
     padding: 20px;
     /* margin-top:50px; */
 }
-
+#search-btn{
+    text-align: right;
+    width:90%;
+}
 
 /* Footer */
 .footer {
@@ -107,6 +110,7 @@ table, td, th {
 table th{
     background-color: #1abc9c;
     color:white;
+    text-align: left !important;
   }
   th, td {
     padding: 15px;
@@ -120,7 +124,83 @@ tr:nth-child(even){background-color: #f2f2f2}
     }
     
 }
+/* modal css */
+input[type=text], input[type=number], select{
+    height: 44px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+    padding: 0 8px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
 
+ #submitBtn {
+    border:none;
+    border-radius: 5px;
+    color: white;   
+    margin-right: 5px;
+    background:#1abc9c;
+    height:44px; 
+    cursor: pointer;
+    text-align:center;
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    /*-webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;*/
+    animation-name: animatetop;
+    animation-duration: 1s
+} 
+
+/* */
+
+@keyframes animatetop {
+    from { opacity:0}
+    to {opacity:1}
+}
+
+/* The Close Button */
+.closeBtn {
+    color: #4B99BD;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeBtn:hover,
+.closeBtn:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 
 
