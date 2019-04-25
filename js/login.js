@@ -21,11 +21,11 @@ function loginUser(){
           
         }
             else if(email == "user@user.com" && password=="user1234"){
-            window.location.href="manage_incidents.html";
+            window.location.href="request_loan.html";
            
         }
             else{
-                alert("Wrong credentials");
+                alert("Wrong credentials. For testing: 'Admin' => {'email':'admin@admin.com', 'Password':'admin1234'}, 'User'=> {'email':'user@user.com', 'password':'user1234'}");
          }
         }
        
