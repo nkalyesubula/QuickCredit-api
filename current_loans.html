@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Current Loans</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/current_n_repaid_loan.css" type="text/css">  
+
+</head>
+<body>
+<!-- Navigation Bar -->
+<div class="navbar">
+  <a href="#"><b>Quick Credit</b></a>
+  <a href="admin_loans_panel.html">Clients</a>
+  <a href="loan_applications.html">Loan Applications</a>
+  <a href="current_loans.html"  class="active">Current Loans</a>
+  <a href="repaid_loans.html">Repaid Loans</a>
+  <a href="index.html">LogOut</a>
+</div>
+
+<!-- The flexible grid (content) -->
+<div class="row">
+ 
+  <div class="main">
+      <h4>Current Loans</h4><hr>
+        <p id="search-btn"><input type="text" placeholder="Search For Loans" style="width: unset !important;"></p>
+        <table border="1">
+            <caption style="text-align:left !important"><b>Current Loans Not Fully Paid</b></caption>
+            <thead role="rowgroup">
+                <tr role="row">
+                    <th role="columnheader">#</th>
+                    <th role="columnheader">Applicant Name</th>
+                    <th role="columnheader">Amount Issued (UGX)</th>
+                    <th role="columnheader">Amount Paid (UGX)</th>
+                    <th role="columnheader">Outstanding Balance (UGX)</th>
+                    <th role="columnheader">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                        <tr role="row">
+                                <td role="cell">1</td>
+                                <td role="cell">Kalyesubula Noah</td>
+                                <td role="cell">100,000</td>
+                                <td role="cell">60,000</td>
+                                <td role="cell">40,000</td>
+                                <td role="cell"><input type="submit"  value="Send Message" id="submitBtn"></td>
+                            </tr>
+                <tr role="row">
+                        <td role="cell">2</td>
+                        <td role="cell">John Doe</td>
+                        <td role="cell">500,000</td>
+                        <td role="cell">450,000</td>
+                        <td role="cell">50,000</td>
+                        <td role="cell"><input type="submit"  value="Send Message" id="submitBtn"></td>
+                    </tr>
+              </tbody>
+            </table>
+    
+       
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+        <h5>&copy; Quick Credit 2019</h5>
+</div>
+
+</body>
+</html>
