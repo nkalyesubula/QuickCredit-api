@@ -17,7 +17,7 @@ function loginUser(){
         }
         else{
              if(email == "admin@admin.com" && password=="admin1234"){
-           alert("The page is under development");
+                window.location.href="admin_loans_panel.html";
           
         }
             else if(email == "user@user.com" && password=="user1234"){
