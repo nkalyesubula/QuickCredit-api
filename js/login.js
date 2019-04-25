@@ -17,7 +17,7 @@ function loginUser(){
         }
         else{
              if(email == "admin@admin.com" && password=="admin1234"){
-           window.location.href= "admin_control_panel.html";
+           alert("The page is under development");
           
         }
             else if(email == "user@user.com" && password=="user1234"){

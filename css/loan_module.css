@@ -1,0 +1,190 @@
+* {
+    box-sizing: border-box;
+}
+
+/* Style the body */
+body {
+    font-family: Arial;
+    margin: 0;
+    width:100%;
+    height:auto;
+}
+
+
+/* Style the top navigation bar */
+.navbar {
+    display: flex;
+    background-color: #333;
+    /* padding: 14px; */
+}
+
+/* Style the navigation bar links */
+.navbar a {
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+#RequestLoan{
+    text-align: right;
+    width:90%;
+}
+button{
+    height: 50px;
+    border-radius: 50px;
+    background-color: #1abc9c;
+    color:white;
+    
+}
+#submit:hover {
+    cursor: pointer;
+    background-color: coral;
+}
+#submit:focus {
+    outline: 0;
+}
+
+/* Change color on hover */
+.navbar a:hover {
+    /* background-color: #1abc9c; */
+    color: coral;
+}
+#logout{
+    text-align: right;
+}
+
+/* Column container */
+.row {  
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.active:hover{
+    color: white !important;
+}
+.active{
+    background: #1abc9c;
+}
+/* Create two unequal columns that sits next to each other */
+/* Sidebar/left column */
+
+
+/* Main column */
+.main {
+    flex: 80%;
+    background-color: white;
+    padding: 20px;
+    /* margin-top:50px; */
+}
+
+
+/* Footer */
+.footer {
+    padding: 20px;
+    text-align: center;
+    background: #ddd;
+
+    position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+  
+
+}
+
+
+table{
+    width:80%;
+    border-collapse: collapse;
+    
+   margin:auto;
+   margin-top: 10px;
+}
+table, td, th {    
+    border: 1px solid #ddd;
+    /* text-align: center; */
+}
+table th{
+    background-color: #1abc9c;
+    color:white;
+  }
+  th, td {
+    padding: 15px;
+}
+tr:nth-child(even){background-color: #f2f2f2}
+
+/* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+@media (max-width: 700px) {
+    .row, .navbar {   
+        flex-direction: column;
+    }
+    
+}
+
+
+
+
+/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+	@media
+	  only screen 
+    and (max-width: 760px), (min-device-width: 300px) 
+    and (max-device-width: 1024px)  {
+
+        table{
+            width:100%;
+        }
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+    tr {
+      margin: 0 0 1rem 0;
+    }
+      
+    tr:nth-child(odd) {
+      background: #ccc;
+    }
+    
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			padding-left: 50%;
+		}
+
+		td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			
+			left: 6px;
+			width: 45%;
+			padding-right: 10px;
+			white-space: nowrap;
+		}
+
+		/*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+		td:nth-of-type(1):before { content: "#"; }
+		td:nth-of-type(2):before { content: "Date Of Payment"; }
+		td:nth-of-type(3):before { content: "Amount Paid"; }
+        td:nth-of-type(4):before { content: "Outstanding Balance"; }
+        
+        .footer{
+            padding: 0px;
+        }
+    }
+    
