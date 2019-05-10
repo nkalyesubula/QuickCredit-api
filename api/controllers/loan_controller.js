@@ -50,12 +50,47 @@ class LoanController {
     });
 }
 
-   
+  
+    // Create a loan repayment record.
+    static payLoan(req, res) {
+        var token = req.headers['x-access-token'];
+        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+        
+        jwt.verify(token, config.secret, function(err, decoded) {
+            if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
 
- 
+            const user = users.find(c => c.id === decoded.id);
+            const loan = loans.find(c => c.id === parseInt(req.params.id));
+            if(user.email != loan.user || user.status !='verified' || loan.status !='approved') return res.status(400).send({'error':'User is not verified or Loan is not approved or is rejected or no loan with the provided id is found'});
+            if(!req.body.amount) return res.status(400).send({'error':'No amount provided'});
+
+            const datatime = new Date();
+            const repayment = new Repayment(repayments.length + 1, datatime ,req.params.id,req.body.amount);
+            repayments.push(repayment);
+            loan.balance = loan.balance - req.body.amount;
+            if(loan.balance <= 0) loan.repaid = true;
+
+            return res.status(201).json({
+                status: 201,
+                data:{
+                    id:repayment.id,
+                    loanId : loan.id,
+                    createdOn : repayment.createdOn,
+                    amount : loan.amount,
+                    monthlyPayment: loan.paymentInstallment,
+                    paidAmount: Repayment.amount,
+                    balance : loan.balance
+                }
+          });
+
+                
+           
+    });
+
+    }
 
 
-
+  
 
 }
 
