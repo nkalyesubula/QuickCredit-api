@@ -14,6 +14,4 @@ routes.get('/api/v1/loans/:id', LoanController.getSpecificLoan);
 routes.get('/api/v1/loans', LoanController.getAllLoans);
 
 
-
-
 module.exports = routes;
