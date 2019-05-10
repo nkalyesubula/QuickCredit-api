@@ -10,6 +10,8 @@ routes.put('/api/v1/users/:user_email/verify', users.UserController.VerifyUser);
 
 // Loan routes
 routes.post('/api/v1/loans', LoanController.requestLoan);
+routes.get('/api/v1/loans/:id', LoanController.getSpecificLoan);
+routes.get('/api/v1/loans', LoanController.getAllLoans);
 
 
 
