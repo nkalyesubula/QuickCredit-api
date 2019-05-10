@@ -28,16 +28,16 @@ Quick Credit is an online lending platform that provides short term soft loans t
 9. Admin can approve or reject a client’s loan application. [done] ```PUT``` on ```localhost:5000/api/v1/loans/:id```
 
 
+## Project Links:
+1. The live demo for this project can be found at: 
+   https://nkalyesubula.github.io/QuickCredit/
 
-The live demo for this project can be found at: 
-https://nkalyesubula.github.io/QuickCredit/
+2. Github repository can be found at:
+   https://github.com/nkalyesubula/QuickCredit/
 
-Github repository can be found at:
-https://github.com/nkalyesubula/QuickCredit/
+3. PivotalTracker link: https://www.pivotaltracker.com/n/projects/2326718
 
-PivotalTracker link: https://www.pivotaltracker.com/n/projects/2326718
-
-Heroku link: https://quickcreditapi.herokuapp.com/api/v1/loans
+4. Heroku link: https://quickcreditapi.herokuapp.com/api/v1/loans
 
 
 
