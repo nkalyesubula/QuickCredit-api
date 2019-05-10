@@ -86,7 +86,30 @@ class LoanController {
         });
         }
 
-   
+    //Approve or reject a loan application.
+    static updateLoanStatus(req, res) {
+        var token = req.headers['x-access-token'];
+        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+        
+        jwt.verify(token, config.secret, function(err, decoded) {
+        if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
+        
+        const user = users.find(c => c.id === decoded.id);
+        if(user.isAdmin !=true) return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
+        const loan = loans.find(c => c.id === parseInt(req.params.id));
+        if(!loan) res.status(404).send({'error':'The loan with the given ID was not found.'});
+        if(!req.body.status) res.status(400).send({'error':'No status provided'});
+        if(req.body.status != 'approved' && req.body.status != 'rejected') res.status(400).send({'error':'the status should either be approved or rejected'});
+
+        //Update loan status
+        loan.status = req.body.status;
+
+        return res.status(200).json({
+            status: 200,
+            data:loans
+        });
+        });
+    }
 
     // Create a loan repayment record.
     static payLoan(req, res) {
@@ -127,7 +150,9 @@ class LoanController {
     }
 
 
-  
+
+
+
 
 }
 
