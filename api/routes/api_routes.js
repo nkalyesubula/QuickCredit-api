@@ -15,5 +15,4 @@ routes.get('/api/v1/loans', LoanController.getAllLoans);
 
 
 
-
 module.exports = routes;
