@@ -18,5 +18,4 @@ routes.get('/api/v1/loans?status=approved&&repaid=true', LoanController.CurrentO
 routes.get('/api/v1/loans?status=approved&&repaid=false', LoanController.CurrentOrRepaidLoans);
 
 
-
 module.exports = routes;
