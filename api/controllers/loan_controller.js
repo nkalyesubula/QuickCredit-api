@@ -49,6 +49,26 @@ class LoanController {
 
     });
 }
+
+    //Get a specific loan
+    static getSpecificLoan(req, res) {
+        var token = req.headers['x-access-token'];
+        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+        
+        jwt.verify(token, config.secret, function(err, decoded) {
+        if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
+        
+        const user = users.find(c => c.id === decoded.id);
+        if(user.isAdmin !=true) return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
+        const loan = loans.find(c => c.id === parseInt(req.params.id));
+        if(!loan) res.status(404).send({'error':'The loan with the given ID was not found.'});
+        return res.status(200).json({
+            status: 200,
+            data:loans
+        });
+        });
+    }
+
     //Get all loans
     static getAllLoans(req, res) {
         var token = req.headers['x-access-token'];
