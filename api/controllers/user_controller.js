@@ -73,33 +73,7 @@ class UserController {
         
     }
         
-    // Mark User as Verified
-    static VerifyUser(req, res) {  
-        var token = req.headers['x-access-token'];
-        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
-        
-        jwt.verify(token, config.secret, function(err, decoded) {
-        if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
-        
-        const user = users.find(c => c.id === decoded.id);
-        if(user.isAdmin !=true) return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
-        //verify users email
-        if(!req.params.user_email){
-            // 400 Bad Request
-            res.status(400).send({status:400, error:'Email is required'});
-        }
-
-        if(user.email != req.params.user_email) res.status(400).send({'error':'Wrong email provided'});
-        //Update user status
-        user.status = 'verified';
-        
-        // Return the verified user
-        return res.status(200).json({
-            status: 200,
-            data:user
-        });
-    });
-}
+  
  
 }
 module.exports.UserController = UserController;
