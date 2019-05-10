@@ -1,0 +1,35 @@
+{
+  "name": "quickcredit",
+  "version": "1.0.0",
+  "description": "online lending platform",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nkalyesubula/QuickCredit.git"
+  },
+  "author": "Kalyesubula Noah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nkalyesubula/QuickCredit/issues"
+  },
+  "homepage": "https://github.com/nkalyesubula/QuickCredit#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "chai": "^4.2.0",
+    "express": "^4.16.4",
+    "jasmine-node": "^1.16.2",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.1.4",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  }
+}
