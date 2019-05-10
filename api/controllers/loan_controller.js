@@ -150,6 +150,33 @@ class LoanController {
     }
 
 
+    //Get all repaid or current loans
+    static CurrentOrRepaidLoans(req, res) {
+        var token = req.headers['x-access-token'];
+            if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+            
+            jwt.verify(token, config.secret, function(err, decoded) {
+            if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
+            
+            const user = users.find(c => c.id === decoded.id);
+            
+            const status =  req.query.status;
+            const repaid =  req.query.repaid;
+            loans_list = [];
+            for(let i=0; i < loans.length; i++){
+                if(loans[i].status == status && loans[i].repaid == repaid){
+                    loans_list.push(loans[i]);
+                }
+            }
+            if(loans_list.length == 0) return res.status(404).send({status:404, error: 'No results found'});
+            if(user.isAdmin !=true) return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
+            return res.status(200).json({
+                status: 200,
+                data:loans_list
+        });
+        });
+        }
+
 
 }
 
