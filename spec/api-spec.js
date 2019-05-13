@@ -46,22 +46,20 @@ describe('Login user',function () {
     });
 });
 
-// Mark As Verified Unit Tests
-// describe('Login user',function () {
-//     it('should return 200 response code', function (done) {
-//         request.post(endpoint+'auth/signin', {json: true, body: {
-//           email:"noahkalyesubula@gmail.com",password:"1234567"
-//           }}, function (error, response) {
-//             expect(response.statusCode).toEqual(200);
-//             done();
-//         });
-//     });
+//Mark As Verified Unit Tests
+describe('Mark User As Verified',function () {
+    it('should return 200 response code', function (done) {
+        request.post(endpoint+'noahkalyesubula@gmail.com/verify', {json: true, body: {}}, function (error, response) {
+            expect(response.statusCode).toEqual(200);
+            done();
+        });
+    });
 
-//     it('should fail on POST', function (done) {
-//         request.post(endpoint+'auth/signup', {json: true, body: {}}, function (error, response) {
-//             expect(response.statusCode).toEqual(response);
-//             done();
-//         });
-//     });
-// });
+    it('should fail on POST', function (done) {
+        request.post(endpoint+'email@email.com/verify', {json: true, body: {}}, function (error, response) {
+            expect(response.statusCode).toEqual(404);
+            done();
+        });
+    });
+});
     

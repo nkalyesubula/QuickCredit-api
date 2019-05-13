@@ -14,8 +14,9 @@ routes.get('/api/v1/loans/:id', LoanController.getSpecificLoan);
 routes.get('/api/v1/loans', LoanController.getAllLoans);
 routes.put('/api/v1/loans/:id', LoanController.updateLoanStatus);
 routes.put('/api/v1/loans/:id/repayment', LoanController.payLoan);
-routes.get('/api/v1/loans?status=approved&&repaid=true', LoanController.CurrentOrRepaidLoans);
-routes.get('/api/v1/loans?status=approved&&repaid=false', LoanController.CurrentOrRepaidLoans);
+routes.get('/api/v1/loans?status=approved&&repaid=true', LoanController.payLoan);
+routes.get('/api/v1/loans?status=approved&&repaid=false',LoanController.payLoan);
+routes.get('/api/v1/repayments', LoanController.getLoanRepaymentHistory);
 
 
 module.exports = routes;
