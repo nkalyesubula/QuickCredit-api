@@ -25,9 +25,10 @@ Quick Credit is an online lending platform that provides short term soft loans t
 6. Admin can view a specific loan application. [done] ```GET``` on ```localhost:8000/api/v1/loans/:id```
 7. Admin can view current loans (not fully repaid). [done] ```GET``` on ```localhost:5000//api/v1/loans?status=approved&&repaid=false```
 8. Admin can view all repaid loans. [done] ```GET``` on ``` localhost:8000/api/v1/loans?status=approved&&repaid=true```
-9. Admin can approve or reject a client’s loan application. [done] ```PUT``` on ```localhost:5000/api/v1/loans/:id```
+9. Admin can approve or reject a client’s loan application. [done] ```PUT``` on ```localhost:8000/api/v1/loans/:id```
+10. User can view loan repayment history. [done] ```GET``` on ```localhost:8000/api/v1/repayments```
 
-
+/api/v1/repayments
 ## Project Links:
 1. The live demo for this project can be found at: 
    https://nkalyesubula.github.io/QuickCredit/
