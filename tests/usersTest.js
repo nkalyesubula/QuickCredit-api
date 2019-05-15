@@ -23,22 +23,6 @@ describe("register user on /api/v1/auth/signup POST", function(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // Import the dependencies for testing
 // var server = require('../server');
 // var chai = require('chai');
