@@ -1,8 +1,8 @@
-
+var app = require("../server");
 var supertest = require("supertest");
 var should = require("should");
 
-var server = supertest.agent('http://localhost:8000');
+var server = supertest.agent(app);
 
 describe("register user on /api/v1/auth/signup POST", function(){
   it("should return 201 response code", function(){
