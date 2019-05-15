@@ -2,11 +2,15 @@ var User = require('../models/user_model.js');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var bcrypt = require('bcryptjs');
 var config = require('../config'); // get config file
+var Joi = require('joi');
 const users = [];
 
 class UserController {
     // Register user
     static registerUser(req, res) {
+        const schema = {
+            
+        }
         if(!req.body.email || !req.body.firstName || !req.body.lastName || !req.body.password || !req.body.address){
             // 400 Bad Request
             res.status(400).send({'error':'Enter all the required fields'});
