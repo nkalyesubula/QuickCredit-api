@@ -2,6 +2,7 @@
 
 ## Badges
 [![Coverage Status](https://coveralls.io/repos/github/nkalyesubula/QuickCredit/badge.svg?branch=develop)](https://coveralls.io/github/nkalyesubula/QuickCredit?branch=develop)
+[![Build Status](https://travis-ci.org/nkalyesubula/QuickCredit.svg?branch=develop)](https://travis-ci.org/nkalyesubula/QuickCredit)
 
 ## Project overview:
 
