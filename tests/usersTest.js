@@ -7,7 +7,7 @@ var server = supertest.agent(app);
 describe("register user on /api/v1/auth/signup POST", function(){
   it("should return 201 response code", function(){
     server
-    .post('api/v1/auth/signup')
+    .post('/api/v1/auth/signup')
     .send({
             firstName :"noah",
             lastName:"kalyesubula",password:"1234567",email:"noahkalyesubula@gmail.com",address:"Kyengera",isAdmin: true

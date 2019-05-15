@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">17.02% </span>
+        <span class="strong">38.3% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>8/47</span>
+        <span class='fraction'>18/47</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">25.93% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/27</span>
+        <span class='fraction'>7/27</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">16.67% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/6</span>
+        <span class='fraction'>1/6</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">20.51% </span>
+        <span class="strong">46.15% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>8/39</span>
+        <span class='fraction'>18/39</span>
       </div>
     </div>
     <p class="quiet">
@@ -165,28 +165,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -273,29 +273,29 @@ const users = [];
 &nbsp;
 class UserController {
     // Register user
-<span class="fstat-no" title="function not covered" >    st</span>atic registerUser(req, res) {
-        const schema = <span class="cstat-no" title="statement not covered" >{</span>
+    static registerUser(req, res) {
+        const schema = {
             
         }
-<span class="cstat-no" title="statement not covered" >        if(!req.body.email || !req.body.firstName || !req.body.lastName || !req.body.password || !req.body.address){</span>
+        <span class="missing-if-branch" title="if path not taken" >I</span>if(!req.body.email || !req.body.firstName || !req.body.lastName || !req.body.password || !req.body.address){
             // 400 Bad Request
 <span class="cstat-no" title="statement not covered" >            res.status(400).send({'error':'Enter all the required fields'});</span>
         }
-        let isAdmin = <span class="cstat-no" title="statement not covered" >req.body.isAdmin;</span>
-<span class="cstat-no" title="statement not covered" >        if(isAdmin !=true){</span>
+        let isAdmin = req.body.isAdmin;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if(isAdmin !=true){
 <span class="cstat-no" title="statement not covered" >            isAdmin = false;</span>
         } 
-        const id = <span class="cstat-no" title="statement not covered" >users.length + 1;</span>
+        const id = users.length + 1;
 &nbsp;
-        var hashedPassword = <span class="cstat-no" title="statement not covered" >bcrypt.hashSync(req.body.password, 8);</span>
+        var hashedPassword = bcrypt.hashSync(req.body.password, 8);
         
         // create a token
-        var token = <span class="cstat-no" title="statement not covered" >jwt.sign({ id: id }, config.secret, {</span>
+        var token = jwt.sign({ id: id }, config.secret, {
             expiresIn: 86400 // expires in 24 hours
         });
-        const user = <span class="cstat-no" title="statement not covered" >new User(id, req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, isAdmin); </span>
-<span class="cstat-no" title="statement not covered" >        users.push(user);</span>
-<span class="cstat-no" title="statement not covered" >        return res.status(201).json({</span>
+        const user = new User(id, req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, isAdmin); 
+        users.push(user);
+        return res.status(201).json({
                 status: 201,
                 data:{
                     token:token,
@@ -379,7 +379,7 @@ module.exports.users = users;</pre></td></tr>
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed May 15 2019 14:59:40 GMT+0300 (East Africa Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed May 15 2019 15:22:37 GMT+0300 (East Africa Time)
 </div>
 </div>
 <script src="..\..\..\prettify.js"></script>
