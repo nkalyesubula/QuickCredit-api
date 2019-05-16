@@ -3,6 +3,7 @@ var Loan = require('../models/loan_model.js');
 var Repayment = require('../models/repayment_model');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config'); 
+var validater = require('../helper');
 
 const users = users_list.users;
 const loans = [];
@@ -19,13 +20,10 @@ class LoanController {
 
             const user = users.find(c => c.id === decoded.id);
             if(user.status == 'unverified')  return res.status(400).send({'error':'User is not verified'});
-            if(!req.body.tenor || !req.body.amount){
-                // 400 Bad Request
-                return res.status(400).send({'error':'Enter all the required fields'});
-            }
-
-            if(req.body.tenor< 1 || req.body.tenor > 12){
-               return res.status(400).send({'error':'Tenor should be atleast 1 month but should not exceed the maximum of 12 months'});
+            
+            const result = validater.requestLoanValidation(req.body);
+            if(result.error){
+                return res.status(400).send({"status":400, "error":result.error.details[0].message});
             }
             const datatime = new Date();
             const loan = new Loan(loans.length + 1, datatime, user.email, req.body.tenor, req.body.amount);
