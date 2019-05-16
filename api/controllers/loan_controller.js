@@ -60,7 +60,7 @@ class LoanController {
         if(!user) return res.status(404).send({"error": "User not found"})
         if(user.isAdmin !=true) return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
         const loan = loans.find(c => c.id === parseInt(req.params.id));
-        if(!loan) res.status(404).send({'error':'The loan with the given ID was not found.'});
+        if(!loan) return res.status(404).send({'error':'The loan with the given ID was not found.'});
         return res.status(200).json({
             status: 200,
             data:loans
@@ -118,7 +118,7 @@ class LoanController {
         const loan = loans.find(c => c.id === parseInt(req.params.id));
         if(!loan) res.status(404).send({'error':'The loan with the given ID was not found.'});
         if(!req.body.status) res.status(400).send({'error':'No status provided'});
-        if(req.body.status != 'approved' && req.body.status != 'rejected') res.status(400).send({'error':'the status should either be approved or rejected'});
+        if(req.body.status != 'approved' || req.body.status != 'rejected') res.status(400).send({'error':'the status should either be approved or rejected'});
 
         //Update loan status
         loan.status = req.body.status;
@@ -169,9 +169,7 @@ class LoanController {
 
     }
 
-
-
-        //Get loan repayment history
+     //Get loan repayment history
     static getLoanRepaymentHistory(req, res) {
         const token = req.headers['x-access-token'];
             if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
