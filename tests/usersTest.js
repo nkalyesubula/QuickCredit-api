@@ -36,8 +36,6 @@ it("should fail on POST", function(){
     res.status.should.equal(400);
   });
 });
-
-
 });
 
 /////////////////////////////////Login user/////////////////////////////////////////////////////
