@@ -1,7 +1,6 @@
 const app = require("../server");
 const supertest = require("supertest");
 const should = require("should");
-
 const server = supertest.agent(app);
 let userToken = '';
 let adminToken = '';
