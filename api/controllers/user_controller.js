@@ -1,8 +1,8 @@
-var User = require('../models/user_model.js');
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var bcrypt = require('bcryptjs');
-var config = require('../config'); // get config file
-var validater = require('../helper');
+const User = require('../models/user_model.js');
+const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const bcrypt = require('bcryptjs');
+const config = require('../config'); // get config file
+const validater = require('../helper');
 const users = [];
 
 class UserController {
@@ -18,10 +18,10 @@ class UserController {
         if(verifyUser) return res.status(400).send({'error':'The user with the given email already exists.', 'status':404});
         
         const id = users.length + 1;
-        var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+        const hashedPassword = bcrypt.hashSync(req.body.password, 8);
         
         // create a token
-        var token = jwt.sign({ id: id }, config.secret, {
+        const token = jwt.sign({ id: id }, config.secret, {
             expiresIn: 86400 // expires in 24 hours
         });
         const user = new User(id, req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, req.body.isAdmin); 
@@ -51,10 +51,10 @@ class UserController {
         const user = users.find(c => c.email === req.body.email);
         if(!user) return res.status(404).send({'error':'The user with the given email was not found.', 'status':404});
         
-        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) return res.status(401).send({ 'error': 'Wrong password', 'status':401 });
         // create a token
-        var token = jwt.sign({ id: user.id}, config.secret, {
+        const token = jwt.sign({ id: user.id}, config.secret, {
             expiresIn: 86400 // expires in 24 hours
         });
         return res.status(200).json({
@@ -75,7 +75,7 @@ class UserController {
         
     // Mark User as Verified
     static VerifyUser(req, res) {  
-        var token = req.headers['x-access-token'];
+        const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 401 });
         
         jwt.verify(token, config.secret, function(err, decoded) {

@@ -1,10 +1,10 @@
-var app = require("../server");
-var supertest = require("supertest");
-var should = require("should");
+const app = require("../server");
+const supertest = require("supertest");
+const should = require("should");
 
-var server = supertest.agent(app);
-var userToken = '';
-var adminToken = '';
+const server = supertest.agent(app);
+const userToken = '';
+const adminToken = '';
 
 /////////////////////////////////Register user/////////////////////////////////////////////////////
 describe("register user on /api/v1/auth/signup POST", function(){

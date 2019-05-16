@@ -1,9 +1,9 @@
-var users_list = require('./user_controller.js');
-var Loan = require('../models/loan_model.js');
-var Repayment = require('../models/repayment_model');
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('../config'); 
-var validater = require('../helper');
+const users_list = require('./user_controller.js');
+const Loan = require('../models/loan_model.js');
+const Repayment = require('../models/repayment_model');
+const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const config = require('../config'); 
+const validater = require('../helper');
 
 const users = users_list.users;
 const loans = [];
@@ -12,7 +12,7 @@ const repayments = [];
 class LoanController {
     // Request Loan
     static requestLoan(req, res) {
-        var token = req.headers['x-access-token'];
+        const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
         jwt.verify(token, config.secret, function(err, decoded) {
@@ -50,7 +50,7 @@ class LoanController {
 
     //Get a specific loan
     static getSpecificLoan(req, res) {
-        var token = req.headers['x-access-token'];
+        const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
         jwt.verify(token, config.secret, function(err, decoded) {
@@ -70,7 +70,7 @@ class LoanController {
 
     //Get all loans
     static getAllLoans(req, res) {
-        var token = req.headers['x-access-token'];
+        const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
         jwt.verify(token, config.secret, function(err, decoded) {
@@ -106,7 +106,7 @@ class LoanController {
 
     //Approve or reject a loan application.
     static updateLoanStatus(req, res) {
-        var token = req.headers['x-access-token'];
+        const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
         jwt.verify(token, config.secret, function(err, decoded) {
@@ -132,7 +132,7 @@ class LoanController {
 
     // Create a loan repayment record.
     static payLoan(req, res) {
-        var token = req.headers['x-access-token'];
+        const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
         jwt.verify(token, config.secret, function(err, decoded) {
@@ -173,7 +173,7 @@ class LoanController {
 
         //Get loan repayment history
     static getLoanRepaymentHistory(req, res) {
-        var token = req.headers['x-access-token'];
+        const token = req.headers['x-access-token'];
             if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
             
             jwt.verify(token, config.secret, function(err, decoded) {

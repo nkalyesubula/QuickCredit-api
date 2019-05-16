@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">7.09% </span>
+        <span class="strong">7.87% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>9/127</span>
+        <span class='fraction'>10/127</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/83</span>
+        <span class='fraction'>0/77</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>0/20</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">10.23% </span>
+        <span class="strong">11.36% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>9/88</span>
+        <span class='fraction'>10/88</span>
       </div>
     </div>
     <p class="quiet">
@@ -247,13 +247,12 @@
 <a name='L199'></a><a href='#L199'>199</a>
 <a name='L200'></a><a href='#L200'>200</a>
 <a name='L201'></a><a href='#L201'>201</a>
-<a name='L202'></a><a href='#L202'>202</a>
-<a name='L203'></a><a href='#L203'>203</a>
-<a name='L204'></a><a href='#L204'>204</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L202'></a><a href='#L202'>202</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -270,11 +269,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -452,11 +448,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">var users_list = require('./user_controller.js');
-var Loan = require('../models/loan_model.js');
-var Repayment = require('../models/repayment_model');
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('../config'); 
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">const users_list = require('./user_controller.js');
+const Loan = require('../models/loan_model.js');
+const Repayment = require('../models/repayment_model');
+const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const config = require('../config'); 
+const validater = require('../helper');
 &nbsp;
 const users = users_list.users;
 const loans = [];
@@ -465,7 +462,7 @@ const repayments = [];
 class LoanController {
     // Request Loan
 <span class="fstat-no" title="function not covered" >    st</span>atic requestLoan(req, res) {
-        var token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
+        const token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
 <span class="cstat-no" title="statement not covered" >        if (!token) <span class="cstat-no" title="statement not covered" >return res.status(401).send({ 'error': 'No token provided', 'status': 400 });</span></span>
         
 <span class="cstat-no" title="statement not covered" >        jwt.verify(token, config.secret, <span class="fstat-no" title="function not covered" >fu</span>nction(err, decoded) {</span>
@@ -473,13 +470,10 @@ class LoanController {
 &nbsp;
             const user = <span class="cstat-no" title="statement not covered" >users.find(<span class="fstat-no" title="function not covered" >c </span>=&gt; <span class="cstat-no" title="statement not covered" >c.id === decoded.id)</span>;</span>
 <span class="cstat-no" title="statement not covered" >            if(user.status == 'unverified')  <span class="cstat-no" title="statement not covered" >return res.status(400).send({'error':'User is not verified'});</span></span>
-<span class="cstat-no" title="statement not covered" >            if(!req.body.tenor || !req.body.amount){</span>
-                // 400 Bad Request
-<span class="cstat-no" title="statement not covered" >                return res.status(400).send({'error':'Enter all the required fields'});</span>
-            }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >            if(req.body.tenor&lt; 1 || req.body.tenor &gt; 12){</span>
-<span class="cstat-no" title="statement not covered" >               return res.status(400).send({'error':'Tenor should be atleast 1 month but should not exceed the maximum of 12 months'});</span>
+            
+            const result = <span class="cstat-no" title="statement not covered" >validater.requestLoanValidation(req.body);</span>
+<span class="cstat-no" title="statement not covered" >            if(result.error){</span>
+<span class="cstat-no" title="statement not covered" >                return res.status(400).send({"status":400, "error":result.error.details[0].message});</span>
             }
             const datatime = <span class="cstat-no" title="statement not covered" >new Date();</span>
             const loan = <span class="cstat-no" title="statement not covered" >new Loan(loans.length + 1, datatime, user.email, req.body.tenor, req.body.amount);</span>
@@ -506,7 +500,7 @@ class LoanController {
 &nbsp;
     //Get a specific loan
 <span class="fstat-no" title="function not covered" >    st</span>atic getSpecificLoan(req, res) {
-        var token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
+        const token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
 <span class="cstat-no" title="statement not covered" >        if (!token) <span class="cstat-no" title="statement not covered" >return res.status(401).send({ 'error': 'No token provided', 'status': 400 });</span></span>
         
 <span class="cstat-no" title="statement not covered" >        jwt.verify(token, config.secret, <span class="fstat-no" title="function not covered" >fu</span>nction(err, decoded) {</span>
@@ -526,7 +520,7 @@ class LoanController {
 &nbsp;
     //Get all loans
 <span class="fstat-no" title="function not covered" >    st</span>atic getAllLoans(req, res) {
-        var token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
+        const token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
 <span class="cstat-no" title="statement not covered" >        if (!token) <span class="cstat-no" title="statement not covered" >return res.status(401).send({ 'error': 'No token provided', 'status': 400 });</span></span>
         
 <span class="cstat-no" title="statement not covered" >        jwt.verify(token, config.secret, <span class="fstat-no" title="function not covered" >fu</span>nction(err, decoded) {</span>
@@ -562,7 +556,7 @@ class LoanController {
 &nbsp;
     //Approve or reject a loan application.
 <span class="fstat-no" title="function not covered" >    st</span>atic updateLoanStatus(req, res) {
-        var token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
+        const token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
 <span class="cstat-no" title="statement not covered" >        if (!token) <span class="cstat-no" title="statement not covered" >return res.status(401).send({ 'error': 'No token provided', 'status': 400 });</span></span>
         
 <span class="cstat-no" title="statement not covered" >        jwt.verify(token, config.secret, <span class="fstat-no" title="function not covered" >fu</span>nction(err, decoded) {</span>
@@ -588,7 +582,7 @@ class LoanController {
 &nbsp;
     // Create a loan repayment record.
 <span class="fstat-no" title="function not covered" >    st</span>atic payLoan(req, res) {
-        var token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
+        const token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
 <span class="cstat-no" title="statement not covered" >        if (!token) <span class="cstat-no" title="statement not covered" >return res.status(401).send({ 'error': 'No token provided', 'status': 400 });</span></span>
         
 <span class="cstat-no" title="statement not covered" >        jwt.verify(token, config.secret, <span class="fstat-no" title="function not covered" >fu</span>nction(err, decoded) {</span>
@@ -629,7 +623,7 @@ class LoanController {
 &nbsp;
         //Get loan repayment history
 <span class="fstat-no" title="function not covered" >    st</span>atic getLoanRepaymentHistory(req, res) {
-        var token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
+        const token = <span class="cstat-no" title="statement not covered" >req.headers['x-access-token'];</span>
 <span class="cstat-no" title="statement not covered" >            if (!token) <span class="cstat-no" title="statement not covered" >return res.status(401).send({ 'error': 'No token provided', 'status': 400 });</span></span>
             
 <span class="cstat-no" title="statement not covered" >            jwt.verify(token, config.secret, <span class="fstat-no" title="function not covered" >fu</span>nction(err, decoded) {</span>
@@ -661,7 +655,7 @@ module.exports = LoanController;</pre></td></tr>
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu May 16 2019 05:28:39 GMT+0300 (East Africa Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu May 16 2019 11:15:03 GMT+0200 (South Africa Standard Time)
 </div>
 </div>
 <script src="..\..\..\prettify.js"></script>
