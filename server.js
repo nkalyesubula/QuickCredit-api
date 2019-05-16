@@ -1,5 +1,5 @@
-var express = require('express');
-var routes  = require('./api/routes/api_routes');
+const express = require('express');
+const routes  = require('./api/routes/api_routes');
 
 // Instantiate express
 const app = express();

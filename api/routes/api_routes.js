@@ -1,6 +1,6 @@
-var Router = require('express');
-var users = require('../controllers/user_controller.js');
-var LoanController = require('../controllers/loan_controller.js');
+const Router = require('express');
+const users = require('../controllers/user_controller.js');
+const LoanController = require('../controllers/loan_controller.js');
 const routes = Router();
 
 // users routes
