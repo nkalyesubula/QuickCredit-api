@@ -69,7 +69,6 @@ describe("mark user as verified on /api/v1/users/:email/verify PUT", function(){
       res.status.should.equal(200);
     });
   });
-
 });
 
     
