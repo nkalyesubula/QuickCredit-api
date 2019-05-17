@@ -9,7 +9,7 @@ class apiValidations{
             lastName: Joi.string().min(3).max(25).required(),
             address: Joi.string().min(5).max(25).required(),
             email: Joi.string().email().required(),
-            password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/).required(),
+            password: Joi.string().min(3).max(15).required(),
             isAdmin:Joi.bool().valid(true, false).required(),
           };
         return Joi.validate(postedData,schema);
@@ -19,7 +19,7 @@ class apiValidations{
     loginUserValidation(postedData){
         const schema = {
             email: Joi.string().email().required(),
-            password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/).required(),
+            password: Joi.string().min(3).max(15).required(),
           };
         return Joi.validate(postedData,schema);
     }
@@ -32,6 +32,7 @@ class apiValidations{
         return Joi.validate(postedData,schema);
     }
     
+    //apply for a loan
     requestLoanValidation(postedData){
         const schema = {
             tenor: Joi.number().integer().positive().max(12).required(),
@@ -39,6 +40,17 @@ class apiValidations{
         };
         return Joi.validate(postedData,schema);
     }
+
+    //get current loans or repaid loans
+    LoansValidation(postedData){
+        const schema = {
+            status: Joi.string().valid('approved').required(),
+            repaid:Joi.bool().valid('true', 'false').required(),
+        };
+        return Joi.validate(postedData,schema);
+    }
+
+
 }
 const validate = new apiValidations();
 module.exports = validate;
