@@ -81,6 +81,10 @@ class LoanController {
         
         //Get all repaid or current loans
         if(Object.keys(req.query).length != 0 && req.query.constructor === Object){
+            const result = validater.LoansValidation(req.query);
+            if(result.error){
+                return res.status(400).send({"status":400, "error":result.error.details[0].message});
+            }
             const status =  req.query.status;
             const repaid =  req.query.repaid;
             const loans_list = [];
@@ -90,7 +94,6 @@ class LoanController {
                 }
             }
             if(loans_list.length == 0) return res.status(404).send({status:404, error: 'No results found'});
-            if(user.isAdmin !=true) return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
             return res.status(200).json({
                 status: 200,
                 data:loans_list
@@ -118,7 +121,7 @@ class LoanController {
         const loan = loans.find(c => c.id === parseInt(req.params.id));
         if(!loan) res.status(404).send({'error':'The loan with the given ID was not found.'});
         if(!req.body.status) res.status(400).send({'error':'No status provided'});
-        if(req.body.status != 'approved' || req.body.status != 'rejected') res.status(400).send({'error':'the status should either be approved or rejected'});
+        if(req.body.status != 'approved' && req.body.status != 'rejected') res.status(400).send({'error':'the status should either be approved or rejected'});
 
         //Update loan status
         loan.status = req.body.status;
@@ -161,10 +164,7 @@ class LoanController {
                     paidAmount: Repayment.amount,
                     balance : loan.balance
                 }
-          });
-
-                
-           
+          });       
     });
 
     }
@@ -177,9 +177,14 @@ class LoanController {
             jwt.verify(token, config.secret, function(err, decoded) {
             if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
             
+            const user = users.find(c => c.id === decoded.id);
+            const loan = loans.find(c => c.id === parseInt(req.params.id));
+            if(!loan || !user) return res.status(404).send({'error':'User not found or Loan with the provided Id is not found'})
+            if(user.email != loan.user) return res.status(400).send({'error':'You dont have a loan with the provided id'});
+            
             const user_repayment_history = []
             for(let i=0; i < repayments.length; i++){
-                if(repayments[i].userId == decoded.id){
+                if(repayments[i].loanId == req.params.id){
                     user_repayment_history.push(repayments[i]);
                 }
             }
