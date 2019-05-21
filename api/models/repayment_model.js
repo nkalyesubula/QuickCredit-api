@@ -8,4 +8,4 @@ class Repayment{
     }
 }
 
-module.exports = Repayment;
+export default Repayment;

@@ -1,13 +1,13 @@
-const users_list = require('./user_controller.js');
-const Loan = require('../models/loan_model.js');
-const Repayment = require('../models/repayment_model');
-const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-const config = require('../config'); 
-const validater = require('../helper');
-
+import users_list from './user_controller.js';
+import Loan from '../models/loan_model.js';
+import Repayment from '../models/repayment_model';
+import jwt from 'jsonwebtoken'; // used to create, sign, and verify tokens
+import validater from '../helper';
+import dotenv from 'dotenv';
 const users = users_list.users;
 const loans = [];
 const repayments = [];
+dotenv.config();
 
 class LoanController {
     // Request Loan
@@ -15,7 +15,7 @@ class LoanController {
         const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
-        jwt.verify(token, config.secret, function(err, decoded) {
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
             if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
 
             const user = users.find(c => c.id === decoded.id);
@@ -53,7 +53,7 @@ class LoanController {
         const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
-        jwt.verify(token, config.secret, function(err, decoded) {
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
         
         const user = users.find(c => c.id === decoded.id);
@@ -73,7 +73,7 @@ class LoanController {
         const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
-        jwt.verify(token, config.secret, function(err, decoded) {
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
         const user = users.find(c => c.id === decoded.id);
         if(!user) return res.status(404).send({"error": "User not found"});
@@ -112,7 +112,7 @@ class LoanController {
         const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
-        jwt.verify(token, config.secret, function(err, decoded) {
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
         
         const user = users.find(c => c.id === decoded.id);
@@ -138,7 +138,7 @@ class LoanController {
         const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
-        jwt.verify(token, config.secret, function(err, decoded) {
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
             if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
 
             const user = users.find(c => c.id === decoded.id);
@@ -174,7 +174,7 @@ class LoanController {
         const token = req.headers['x-access-token'];
             if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
             
-            jwt.verify(token, config.secret, function(err, decoded) {
+            jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
             if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
             
             const user = users.find(c => c.id === decoded.id);
@@ -202,4 +202,4 @@ class LoanController {
 
 
 
-module.exports = LoanController;
+export default LoanController;

@@ -1,9 +1,10 @@
-const User = require('../models/user_model.js');
-const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-const bcrypt = require('bcryptjs');
-const config = require('../config'); // get config file
-const validater = require('../helper');
+import User from '../models/user_model.js';
+import jwt from 'jsonwebtoken'; // used to create, sign, and verify tokens
+import bcrypt from 'bcryptjs';
+import validater from '../helper';
+import dotenv from 'dotenv';
 const users = [];
+dotenv.config();
 
 class UserController {
     // Register user
@@ -21,7 +22,7 @@ class UserController {
         const hashedPassword = bcrypt.hashSync(req.body.password, 8);
         
         // create a token
-        const token = jwt.sign({ id: id }, config.secret, {
+        const token = jwt.sign({ id: id }, process.env.SECRET_KEY, {
             expiresIn: 86400 // expires in 24 hours
         });
         const user = new User(id, req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, req.body.isAdmin); 
@@ -54,7 +55,7 @@ class UserController {
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) return res.status(401).send({ 'error': 'Wrong password', 'status':401 });
         // create a token
-        const token = jwt.sign({ id: user.id}, config.secret, {
+        const token = jwt.sign({ id: user.id}, process.env.SECRET_KEY, {
             expiresIn: 86400 // expires in 24 hours
         });
         return res.status(200).json({
@@ -78,7 +79,7 @@ class UserController {
         const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 401 });
         
-        jwt.verify(token, config.secret, function(err, decoded) {
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
         
         const user = users.find(c => c.id === decoded.id);
@@ -103,5 +104,5 @@ class UserController {
 }
  
 }
-module.exports.UserController = UserController;
-module.exports.users = users;
+
+export default {UserController, users};

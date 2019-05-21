@@ -1,6 +1,6 @@
-const Router = require('express');
-const users = require('../controllers/user_controller.js');
-const LoanController = require('../controllers/loan_controller.js');
+import Router from 'express';
+import users from '../controllers/user_controller.js';
+import LoanController from '../controllers/loan_controller.js';
 const routes = Router();
 
 // users routes
@@ -18,5 +18,4 @@ routes.get('/api/v1/loans?status=approved&&repaid=true', LoanController.payLoan)
 routes.get('/api/v1/loans?status=approved&&repaid=false',LoanController.payLoan);
 routes.get('/api/v1/loans/:id/repayment', LoanController.getLoanRepaymentHistory);
 
-
-module.exports = routes;
+export default routes;

@@ -1,5 +1,5 @@
-const express = require('express');
-const routes  = require('./api/routes/api_routes');
+import express from 'express';
+import routes  from './api/routes/api_routes';
 
 // Instantiate express
 const app = express();
@@ -18,4 +18,4 @@ app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
 // Export our app for testing purposes
-module.exports = app;
+export default app;

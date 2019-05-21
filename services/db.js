@@ -1,14 +1,15 @@
-const pg = require('pg');
+import  { Pool } from 'pg';
+import dotenv from 'dotenv';
 
-const config = {
-  user: 'postgres', //this is the db user credential
-  database: 'QuickCredit',
-  password: 'admin',
-  port: 5555,
-  idleTimeoutMillis: 30000
-};
+dotenv.config();
 
-const pool = new pg.Pool(config);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+pool.on('connect', () => {
+  console.log('connected to the db');
+});
 
 const createTables = () => {
 

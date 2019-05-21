@@ -13,4 +13,4 @@ class Loan{
     }
 }
 
-module.exports = Loan;
+export default Loan;
