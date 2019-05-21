@@ -56,6 +56,44 @@ class UserController {
         });
 }
 
+ // Login User
+ static LoginUser(req, res) {
+    const result = validater.loginUserValidation(req.body);
+    if(result.error){
+       return res.status(400).send({"status":400, "error":result.error.details[0].message});
+    }
+    
+    //check if the email already exists
+    // check if user already exists
+    const query = 'SELECT * FROM users WHERE email =$1';
+    const value=[req.body.email];
+    pool.query(query, value, (error, result) => {
+        if(result.rows.length > 0){
+        const passwordIsValid = bcrypt.compareSync(req.body.password, result.rows[0]['password']);
+        if(!passwordIsValid) return res.status(401).send({ 'error': 'Wrong password', 'status':401 });
+            // create a token
+            const token = jwt.sign({ id: result.rows[0]['id'] }, process.env.SECRET_KEY , {
+            expiresIn: 86400 // expires in 24 hours
+        });
+        return res.status(201).json({
+            status: 201,
+            data:{
+                token:token,
+                id: result.rows[0]['id'],
+                email: result.rows[0]['email'],
+                firstName: result.rows[0]['firstname'],
+                lastName: result.rows[0]['lastname'],
+                address: result.rows[0]['address'],
+                status: result.rows[0]['status'],
+                isAdmin: result.rows[0]['isadmin']
+            }
+        });
+      }
+      return res.status(404).send({'error':'The user with the given email was not found.', 'status':404});
+    });   
+}
+
+
 }
 
 
