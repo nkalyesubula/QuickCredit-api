@@ -14,7 +14,7 @@
   "scripts": {
     "test": "nyc mocha",
     "start": "nodemon --exec babel-node server.js",
-    "create": "node ./services/db createTables",
+    "create": "babel-node ./services/db createTables",
     "test:coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {

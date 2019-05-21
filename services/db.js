@@ -1,14 +1,17 @@
-import  { Pool } from 'pg';
+import pg from 'pg';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
+const config = {
+  user: process.env.DATABASE_ROOT, 
+  database: process.env.DATABASE_NAME,
+  password: process.env.DATABASE_PASSWORD,
+  port: process.env.DATABASE_PORT
+};
+
+const pool = new pg.Pool(config);
 
 pool.on('connect', () => {
-  console.log('connected to the db');
 });
 
 const createTables = () => {
@@ -63,13 +66,12 @@ const loanRepaymentTable = `CREATE TABLE IF NOT EXISTS repayments
 }
 
 pool.on('remove', () => {
-  console.log('client removed');
   process.exit(0);
 });
 
 
 //export pool and createTables to be accessible  from an where within the application
-module.exports = {
+export {
   createTables,
   pool,
 };

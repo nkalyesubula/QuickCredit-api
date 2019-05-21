@@ -1,7 +1,16 @@
 const Joi = require('joi');
 
 class apiValidations{
-    
+    //
+    tokenValidation(){
+        const token = req.headers['x-access-token'];
+        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 401 });
+        
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
+        if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
+        });
+    }
+
     //register user validations 
     registerUserValidation(postedData){
         const schema = {
