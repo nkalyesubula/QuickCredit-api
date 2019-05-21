@@ -5,8 +5,7 @@ const config = {
   database: 'QuickCredit',
   password: 'admin',
   port: 5555,
-  max: 10, // max number of clients in the pool
-  idleTimeoutMillis: 30000,
+  idleTimeoutMillis: 30000
 };
 
 const pool = new pg.Pool(config);
@@ -27,16 +26,16 @@ const createTables = () => {
 // loans table
 const loanTable = `CREATE TABLE IF NOT EXISTS loans
       (   id SERIAL PRIMARY KEY    NOT NULL,
-          user         VARCHAR(255)     NOT NULL,
+          userEmail        VARCHAR(255)     NOT NULL,
           tenor        INTEGER   NOT NULL,
           amount       INTEGER   NOT NULL,
           interest     INTEGER   NOT NULL,
           paymentInstallment     INTEGER   NOT NULL,
           balance     INTEGER   NOT NULL,
-          repaid VARCHAR(100)  DEFAULT false,
+          repaid   BOOLEAN DEFAULT false,
           status VARCHAR(100)  DEFAULT 'pending',          
           createdOn TIMESTAMP DEFAULT NOW()
-          )`
+          )`;
 
 // repayments table
 
@@ -50,7 +49,7 @@ const loanRepaymentTable = `CREATE TABLE IF NOT EXISTS repayments
           FOREIGN KEY (loanId) REFERENCES loans (id)
           ON UPDATE CASCADE ON DELETE CASCADE
         )`;
-  const createTablesQuery = `${userTable};${loanTable};${loanRepaymentTable};`
+  const createTablesQuery = `${userTable};${loanTable};${loanRepaymentTable};`;
   pool.query(createTablesQuery)
   .then((res) => {
   console.log(res);
