@@ -189,7 +189,7 @@ static getAllLoans(req, res) {
     jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
 
-        //check if user is verified
+        
         const query = 'SELECT * FROM users WHERE id =$1';
         const value=[decoded.id];
         pool.query(query, value, (error, result) => {

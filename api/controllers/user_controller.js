@@ -11,10 +11,8 @@ class UserController {
     // Register user
       static registerUser(req, res) {
         const result = validater.registerUserValidation(req.body);
-        if(result.error){
-           return res.status(400).send({"status":400, "error":result.error.details[0].message});
-        }
-
+        if(result.error) return res.status(400).send({"status":400, "error":result.error.details[0].message});
+        
         // check if user already exists
         const query = 'SELECT * FROM users WHERE email =$1';
         const value=[req.body.email];
@@ -74,8 +72,8 @@ class UserController {
             const token = jwt.sign({ id: result.rows[0]['id'] }, process.env.SECRET_KEY , {
             expiresIn: 86400 // expires in 24 hours
         });
-        return res.status(201).json({
-            status: 201,
+        return res.status(200).json({
+            status: 200,
             data:{
                 token:token,
                 id: result.rows[0]['id'],
