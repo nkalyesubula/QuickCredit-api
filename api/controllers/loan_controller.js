@@ -167,7 +167,8 @@ static getAllLoans(req, res) {
             });
         }
         else{
-        //Get all loans
+        
+            //Get all loans
         pool.query(getLoansQuery, (error, result) => {
             return res.status(200).json({
                 status: 200,
