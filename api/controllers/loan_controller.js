@@ -181,7 +181,91 @@ static getAllLoans(req, res) {
 });
     }
 
+ // Create a loan repayment record.
+ static payLoan(req, res) {
+    const token = req.headers['x-access-token'];
+    if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+    
+    jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
+        if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
 
+        //check if user is verified
+        const query = 'SELECT * FROM users WHERE id =$1';
+        const value=[decoded.id];
+        pool.query(query, value, (error, result) => {
+            if(result.rows[0]['isadmin'] != true)  return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
+            const results = validater.amountValidation(req.body);
+            if(results.error) return res.status(400).send({"status":400, "error":results.error.details[0].message});
+            const getLoanQuery = 'SELECT * FROM loans WHERE id =$1';
+            const loanId=[parseInt(req.params.id)];
+            pool.query(getLoanQuery, loanId, (error, result) => {
+            if(result.rows.length == 0) return res.status(404).send({'error':'The loan with the given ID was not found.'});
+            if(result.rows[0]['status'] != "approved") return res.status(400).send({'error':'Loan is not approved or is rejected'});
+            const paymentInstallment = result.rows[0]['paymentinstallment']
+            const current_balance = result.rows[0]['balance'];
+            const loanAmount =  result.rows[0]['amount'];
+            const repayment = new Repayment(decoded.id, req.params.id,req.body.amount);
+            const payLoanQuery = 'INSERT INTO repayments(userid, amount,loanid) VALUES($1,$2,$3) RETURNING *';
+            const repaymentArgs = [repayment.userId,repayment.amount,repayment.loanId];
+            pool.query(payLoanQuery, repaymentArgs, (error, result) => {
+                if(error) return res.send(error);
+                //update Loan
+                const repaymentId = result.rows[0]['id'];
+                const repaymentDate = result.rows[0]['createdon'];
+                const repaymentAmount = result.rows[0]['amount'];
+                let balance = current_balance - req.body.amount;
+                let repaid = false;
+                if(balance <= 0)
+                {
+                   repaid = true;
+                }
+                const updateLoanQuery = 'UPDATE loans set balance=$1, repaid=$2';
+                const updateLoanArgs = [balance,repaid];
+                pool.query(updateLoanQuery, updateLoanArgs, (error, result) => {
+                    return res.status(201).json({
+                        status: 201,
+                        data:{
+                            id:repaymentId,
+                            loanId : req.params.id,
+                            createdOn : repaymentDate,
+                            amount : loanAmount,
+                            monthlyPayment: paymentInstallment,
+                            paidAmount: repaymentAmount,
+                            balance : balance
+                        }
+                  }); 
+            });
+        });
+        });
+
+});
+
+});
+ }
+
+  //Get loan repayment history
+  static getLoanRepaymentHistory(req, res) {
+    const token = req.headers['x-access-token'];
+        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+        
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
+        if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
+        
+        //check if user is verified
+        const query = 'SELECT * FROM users WHERE id =$1';
+        const value=[decoded.id];
+    
+        const getLoanQuery = 'SELECT * FROM repayments WHERE loanid =$1';
+        const loanId=[parseInt(req.params.id)];
+        pool.query(getLoanQuery, loanId, (error, result) => {
+            if(result.rows.length == 0) return res.status(404).send({'error':'The loan with the given ID was not found.'});
+            return res.status(200).json({
+                status: 200,
+                data:result.rows
+        }); 
+        });
+    });
+    }
 }
 
 export default LoanController;

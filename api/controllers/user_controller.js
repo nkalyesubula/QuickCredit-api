@@ -27,8 +27,8 @@ class UserController {
         
             const user = new User(req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, req.body.isAdmin);
         
-            const query = 'INSERT INTO users(firstName,lastName, email, password, isAdmin) VALUES($1,$2,$3,$4,$5) RETURNING *';
-            const values = [user.firstName, user.lastName, user.email, user.password, user.isAdmin];
+            const query = 'INSERT INTO users(firstName,lastName, address, email, password, isAdmin) VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+            const values = [user.firstName, user.lastName, user.address,user.email, user.password, user.isAdmin];
     
             pool.query(query, values, (error, result) => {
                 if (error) {
@@ -129,8 +129,6 @@ class UserController {
         });
     });
 });
-
-
 }
 }
 

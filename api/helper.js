@@ -58,6 +58,13 @@ class apiValidations{
         };
         return Joi.validate(postedData,schema);
     }
+    //make loan payment
+    amountValidation(postedData){
+        const schema = {
+            amount:Joi.number().positive().required(),
+        };
+        return Joi.validate(postedData,schema);
+    }
 
 
 }

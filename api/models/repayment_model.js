@@ -1,8 +1,6 @@
 class Repayment{
-    constructor(id, userId, createdOn, loanId, amount){
-        this.id = id;
+    constructor(userId, loanId, amount){
         this.userId = userId;
-        this.createdOn = createdOn;
         this.loanId = loanId;
         this.amount = amount;
     }
