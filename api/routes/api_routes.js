@@ -11,5 +11,8 @@ routes.put('/api/v1/users/:userEmail/verify', users.UserController.VerifyUser);
 // Loan routes
 routes.post('/api/v1/loans', LoanController.requestLoan);
 routes.get('/api/v1/loans/:id', LoanController.getSpecificLoan);
+routes.get('/api/v1/loans', LoanController.getAllLoans);
+routes.get('/api/v1/loans?status=approved&&repaid=true', LoanController.getAllLoans);
+routes.get('/api/v1/loans?status=approved&&repaid=false',LoanController.getAllLoans);
 routes.put('/api/v1/loans/:id', LoanController.updateLoanStatus);
 export default routes;

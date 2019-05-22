@@ -136,6 +136,49 @@ class LoanController {
 }
 
 
+//Get all loans
+static getAllLoans(req, res) {
+    const token = req.headers['x-access-token'];
+    if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+    
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded)=> {
+    if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
+    //check if user is an admin
+    const getUserQuery = 'SELECT * FROM users WHERE id =$1';
+    const getLoansQuery = 'SELECT * FROM loans';
+    const userId=[decoded.id];
+    pool.query(getUserQuery, userId, (error, result) => {
+        if(result.rows[0]['isadmin'] != true)  return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
+            
+       // Get all repaid or current loans
+        if(Object.keys(req.query).length != 0 && req.query.constructor === Object){
+            const result = validater.LoansValidation(req.query);
+            if(result.error) return res.status(400).send({"status":400, "error":result.error.details[0].message}); 
+            const status =  req.query.status;
+            const repaid = req.query.repaid;
+            const categories= [status, repaid];
+
+            const getLoansCategories = 'SELECT * FROM loans WHERE status=$1 AND repaid=$2';
+            pool.query(getLoansCategories, categories, (error, result) => {
+                return res.status(200).json({
+                    status: 200,
+                    data:result.rows
+                });
+            });
+        }else{
+        //Get all loans
+        pool.query(getLoansQuery, (error, result) => {
+            return res.status(200).json({
+                status: 200,
+                data:result.rows
+            });
+        });
+    }
+    });    
+   
+});
+    }
+
 
 }
 
