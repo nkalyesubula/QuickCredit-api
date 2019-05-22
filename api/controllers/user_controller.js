@@ -105,30 +105,30 @@ class UserController {
     const value=[decoded.id];
     pool.query(query, value, (error, result) => {
         if(result.rows[0]['isadmin'] != true)  return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
-        //verify users email
+        
+        //check if the provided email is a valid email
         const results = validater.verifyUserValidation(req.params);
         if(results.error) return res.status(400).send({"status":400, "error":results.error.details[0].message});
 
+        const getverifieduser = 'SELECT * FROM users WHERE email =$1';
+        const query_value =[req.params.userEmail];
         const verify_user_query = 'UPDATE users set status=$1 WHERE email =$2';
         const required_values =['verified', req.params.userEmail];
-        pool.query(verify_user_query, required_values, (error, result) => {
+        pool.query(getverifieduser, query_value, (error, result) => {
+            if(result.rows.length == 0) return res.status(404).send({status:404, error:'User with provided email is not found'});
+            pool.query(verify_user_query, required_values, (error, result) => {
             
-            // Return the verified user
-            const getverifieduser = 'SELECT * FROM users WHERE email =$1';
-            const query_value =[req.params.userEmail];
-            pool.query(getverifieduser, query_value, (error, result) => {
-                return res.status(200).json({
-                    status: 200,
-                    data:result.rows
-                });
+                // Return the verified user
+                pool.query(getverifieduser, query_value, (error, result) => {
+                    return res.status(200).json({
+                        status: 200,
+                        data:result.rows
+                    });
+                });  
             });
-            
         });
-        
-        // if(!userToBeVerified) return res.status(404).send({'error':'The user with the given email was not found.', 'status':404});
-     
     });
-    });
+});
 
 
 }

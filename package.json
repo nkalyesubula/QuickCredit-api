@@ -3,18 +3,13 @@
   "version": "1.0.0",
   "description": "online lending platform",
   "main": "server.js",
-  "nyc":{
-    "require":[
-      "babel-register"
-    ]
-  },
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "nyc mocha",
+    "test": "nyc --reporter=lcov --reporter=html --reporter=text mocha ./tests/*js require babel-polyfill babel-register --timeout 10000 --exit",
     "start": "nodemon --exec babel-node server.js",
-    "create": "babel-node ./services/db createTables",
+    "create": "node ./services/db createTables",
     "test:coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
