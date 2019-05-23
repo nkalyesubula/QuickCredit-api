@@ -11,11 +11,5 @@ routes.post('/api/v1/auth/resetpassword', users.UserController.resetPassword);
 
 // Loan routes
 routes.post('/api/v1/loans', LoanController.requestLoan);
-routes.get('/api/v1/loans/:id', LoanController.getSpecificLoan);
-routes.get('/api/v1/loans', LoanController.getAllLoans);
-routes.get('/api/v1/loans?status=approved&&repaid=true', LoanController.getAllLoans);
-routes.get('/api/v1/loans?status=approved&&repaid=false',LoanController.getAllLoans);
-routes.post('/api/v1/loans/:id/repayment', LoanController.payLoan);
-routes.put('/api/v1/loans/:id', LoanController.updateLoanStatus);
-routes.get('/api/v1/loans/:id/repayment', LoanController.getLoanRepaymentHistory);
+
 export default routes;
