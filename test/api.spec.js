@@ -104,4 +104,47 @@ it('should signup a user with valid details', (done) => {
       })
       .catch(err => done(err));
   });
+ //Login Admin
+ it('should login admin', (done) => {
+  chai.request(app)
+    .post('/api/v1/auth/signin')
+    .send({ email: adminEmail, password: '1234567' })
+    .then((res) => {
+      adminToken = res.body.data['token'];
+      expect(res.status).to.be.equal(200);
+      expect(res.body).to.have.property('data');
+      done();
+    })
+    .catch(error => done(error));
+});
+
+//Login User
+it('should login user', (done) => {
+  chai.request(app)
+    .post('/api/v1/auth/signin')
+    .send({ email: userEmail, password: '1234567' })
+    .then((res) => {
+      userToken = res.body.data['token'];
+      expect(res.status).to.be.equal(200);
+      expect(res.body).to.have.property('data');
+      done();
+    })
+    .catch(error => done(error));
+});
+
+//don't login user with wrong details
+it('should not login user with invalid details', (done) => {
+  chai.request(app)
+    .post('/api/v1/auth/signin')
+    .send({ email: adminEmail, password: 'xxxx' })
+    .then((res) => {
+      expect(res.status).to.be.equal(401);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      done();
+    })
+    .catch(error => done(error));
+});
+
+
 });

@@ -54,7 +54,8 @@ class UserController {
         });
 }
 
- // Login User
+ 
+ /////////////////////////////////////////////////////////// Login User //////////////////////////////////////////////////////////////////////
  static LoginUser(req, res) {
     const result = validater.loginUserValidation(req.body);
     if(result.error){
@@ -62,7 +63,6 @@ class UserController {
     }
     
     //check if the email already exists
-    // check if user already exists
     const query = 'SELECT * FROM users WHERE email =$1';
     const value=[req.body.email];
     pool.query(query, value, (error, result) => {
@@ -73,8 +73,8 @@ class UserController {
             const token = jwt.sign({ id: result.rows[0]['id'] }, process.env.SECRET_KEY , {
             expiresIn: 86400 // expires in 24 hours
         });
-        return res.status(201).json({
-            status: 201,
+        return res.status(200).json({
+            status: 200,
             data:{
                 token:token,
                 id: result.rows[0]['id'],
@@ -90,7 +90,6 @@ class UserController {
       return res.status(404).send({'error':'The user with the given email was not found.', 'status':404});
     });   
 }
-
 
 }
 export default {UserController};
