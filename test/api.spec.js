@@ -212,6 +212,41 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
+  it('should view current loans (not fully repaid)', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans?status=approved&repaid=false')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should post a loan repayment successfully (ADMIN)', (done) => {
+    chai.request(app)
+      .post('/api/v1/loans/1/repayment')
+      .set('x-access-token', adminToken)
+      .send({ amount: 900})
+      .then((res) => {
+        expect(res.status).to.be.equal(201);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+ 
+  it('should get all loan applications', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
   it('should get a specific loan application', (done) => {
     chai.request(app)
       .get('/api/v1/loans/1')
@@ -234,9 +269,30 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
-  it('should get all loan applications', (done) => {
+  it('should retrieve a loan repayment', (done) => {
     chai.request(app)
-      .get('/api/v1/loans')
+      .get('/api/v1/loans/1/repayment')
+      .set('x-access-token', userToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should not retrieve a loan repayment', (done) => {
+    chai.request(app)
+      .get('/api/v1/loan/0/repayments')
+      .set('x-access-token', userToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(404);
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should view current loans (fully repaid)', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans?status=approved&repaid=true')
       .set('x-access-token', adminToken)
       .then((res) => {
         expect(res.status).to.be.equal(200);
@@ -245,5 +301,17 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
-
+  it('should reject a loan', (done) => {
+    chai.request(app)
+      .put('/api/v1/loans/1')
+      .send({ status: 'rejected' })
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+ 
 });

@@ -246,6 +246,29 @@ static payLoan(req, res) {
  }
 
 
+  //////////////////////////////////////////////////// Get loan repayment history ////////////////////////////////////////////////////////////////////////////
+  static getLoanRepaymentHistory(req, res) {
+    const token = req.headers['x-access-token'];
+        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
+        
+        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
+        if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
+        const validateId = validater.loanIdValidation(req.params);
+        if(validateId.error) return res.status(400).send({"status":400, "error":validateId.error.details[0].message});
+
+        const query = 'SELECT * FROM users WHERE id =$1';
+        const value=[decoded.id];
+        const getLoanQuery = 'SELECT * FROM repayments WHERE loanid =$1';
+        const loanId=[parseInt(req.params.id)];
+        pool.query(getLoanQuery, loanId, (error, result) => {
+            if(result.rows.length == 0) return res.status(404).send({'error':'The loan with the given ID was not found.'});
+            return res.status(200).json({
+                status: 200,
+                data:result.rows
+        }); 
+        });
+    });
+    }
 
 }
 
