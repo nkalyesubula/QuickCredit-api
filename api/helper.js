@@ -1,16 +1,7 @@
 const Joi = require('joi');
 
 class apiValidations{
-    //
-    tokenValidation(){
-        const token = req.headers['x-access-token'];
-        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 401 });
-        
-        jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
-        if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
-        });
-    }
-
+    
     //register user validations 
     registerUserValidation(postedData){
         const schema = {
@@ -56,6 +47,30 @@ class apiValidations{
             status: Joi.string().valid('approved').required(),
             repaid:Joi.bool().valid('true', 'false').required(),
         };
+        return Joi.validate(postedData,schema);
+    }
+    //make loan payment
+    amountValidation(postedData){
+        const schema = {
+            amount:Joi.number().positive().required(),
+        };
+        return Joi.validate(postedData,schema);
+    }
+    //validate Loan
+    loanIdValidation(postedData){
+        const schema = {
+            id:Joi.number().positive().required(),
+        };
+        return Joi.validate(postedData,schema);
+    }
+
+   // reset password validations 
+    resetPasswordValidation(postedData){
+        const schema = {
+            email: Joi.string().email().required(),
+            currentPassword: Joi.string().min(3).max(15).required(),
+            newPassword: Joi.string().min(3).max(15).required(),
+          };
         return Joi.validate(postedData,schema);
     }
 

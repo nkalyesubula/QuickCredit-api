@@ -4,9 +4,7 @@ dotenv.config();
 
 const config = {
   user: process.env.DATABASE_ROOT, 
-  database: process.env.DATABASE_NAME,
-  password: process.env.DATABASE_PASSWORD,
-  port: process.env.DATABASE_PORT
+  database: process.env.DATABASE_NAME
 };
 
 const pool = new pg.Pool(config);
@@ -21,6 +19,7 @@ const createTables = () => {
                       (   id SERIAL PRIMARY KEY    NOT NULL,
                           firstName         VARCHAR(255)     NOT NULL,
                           lastName          VARCHAR(255)     NOT NULL,
+                          address          VARCHAR(255)     NOT NULL,
                           email             VARCHAR(255)     NOT NULL,
                           password          VARCHAR(255)     NOT NULL,
                           status VARCHAR(100)  DEFAULT 'unverified',
@@ -48,7 +47,7 @@ const loanRepaymentTable = `CREATE TABLE IF NOT EXISTS repayments
           userId       INTEGER     NOT NULL,
           amount       INTEGER   NOT NULL,
           loanId     INTEGER   NOT NULL,         
-          createdOn     DATE     NOT NULL,
+          createdOn TIMESTAMP DEFAULT NOW(),
           FOREIGN KEY (userId) REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
           FOREIGN KEY (loanId) REFERENCES loans (id)
           ON UPDATE CASCADE ON DELETE CASCADE
