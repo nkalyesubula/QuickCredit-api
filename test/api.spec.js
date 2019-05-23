@@ -146,5 +146,29 @@ it('should not login user with invalid details', (done) => {
     .catch(error => done(error));
 });
 
+ //verify user
+ it('should verify a user', (done) => {
+  chai.request(app)
+    .put(`/api/v1/users/${userEmail}/verify`)
+    .set('x-access-token', adminToken)
+    .then((res) => {
+      expect(res.status).to.be.equal(200);
+      expect(res.body).to.have.property('status');
+      expect(res.body).to.have.property('data');
+      done();
+    })
+    .catch(error => done(error));
+});
+//should not verify wrong email
+it('should not verified a user successfully', (done) => {
+  chai.request(app)
+    .put('/api/v1/users/jojkiuulary@gmai.com/verify')
+    .set('x-access-token', adminToken)
+    .then((res) => {
+      expect(res.status).to.be.equal(404);
+      done();
+    })
+    .catch(error => done(error));
+});
 
 });

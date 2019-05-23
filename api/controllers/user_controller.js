@@ -91,5 +91,45 @@ class UserController {
     });   
 }
 
+////////////////////////////////////////////////// Mark User as Verified ////////////////////////////////////////////////////////////////////
+static VerifyUser(req, res) {  
+    const token = req.headers['x-access-token'];
+    if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 401 });
+    
+    jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
+    if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
+    
+    //check if user is an admin
+    const query = 'SELECT * FROM users WHERE id =$1';
+    const value=[decoded.id];
+    pool.query(query, value, (error, result) => {
+        if(result.rows[0]['isadmin'] != true)  return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
+        
+        //check if the provided email is a valid email
+        const results = validater.verifyUserValidation(req.params);
+        if(results.error) return res.status(400).send({"status":400, "error":results.error.details[0].message});
+
+        const getverifieduser = 'SELECT * FROM users WHERE email =$1';
+        const query_value =[req.params.userEmail];
+        const verify_user_query = 'UPDATE users set status=$1 WHERE email =$2';
+        const required_values =['verified', req.params.userEmail];
+        pool.query(getverifieduser, query_value, (error, result) => {
+            if(result.rows.length == 0) return res.status(404).send({status:404, error:'User with provided email is not found'});
+            pool.query(verify_user_query, required_values, (error, result) => {
+            
+                // Return the verified user
+                pool.query(getverifieduser, query_value, (error, result) => {
+                    return res.status(200).json({
+                        status: 200,
+                        data:result.rows
+                    });
+                });  
+            });
+        });
+    });
+});
+}
+
+
 }
 export default {UserController};
