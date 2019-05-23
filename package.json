@@ -12,7 +12,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "nyc --reporter=lcov --reporter=html --reporter=text mocha ./test --timeout 10000 --exit",
+    "test": "npm run create && nyc --reporter=lcov --reporter=html --reporter=text mocha ./test --timeout 10000 --exit",
     
     "start": "nodemon --exec babel-node server.js",
     "create": "babel-node ./services/db createTables",
