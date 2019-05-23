@@ -1,6 +1,6 @@
+import pool from '../../services/connectdb';
 class User{
-    constructor(id, email, firstName, lastName, hashedPassword, address, isAdmin){
-        this.id = id;
+    constructor(email, firstName, lastName, hashedPassword, address, isAdmin){
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -10,5 +10,4 @@ class User{
         this.isAdmin = isAdmin;
     }
 }
-
-module.exports = User;
+export default User;

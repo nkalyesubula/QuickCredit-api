@@ -49,6 +49,30 @@ class apiValidations{
         };
         return Joi.validate(postedData,schema);
     }
+    //make loan payment
+    amountValidation(postedData){
+        const schema = {
+            amount:Joi.number().positive().required(),
+        };
+        return Joi.validate(postedData,schema);
+    }
+    //validate Loan
+    loanIdValidation(postedData){
+        const schema = {
+            id:Joi.number().positive().required(),
+        };
+        return Joi.validate(postedData,schema);
+    }
+
+   // reset password validations 
+    resetPasswordValidation(postedData){
+        const schema = {
+            email: Joi.string().email().required(),
+            currentPassword: Joi.string().min(3).max(15).required(),
+            newPassword: Joi.string().min(3).max(15).required(),
+          };
+        return Joi.validate(postedData,schema);
+    }
 
 
 }

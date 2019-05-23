@@ -1,107 +1,58 @@
-const User = require('../models/user_model.js');
-const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-const bcrypt = require('bcryptjs');
-const config = require('../config'); // get config file
-const validater = require('../helper');
-const users = [];
+import User from '../models/user_model';
+import jwt from 'jsonwebtoken'; // used to create, sign, and verify tokens
+import bcrypt from 'bcryptjs';
+import validater from '../helper';
+import pool from '../../services/connectdb';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class UserController {
-    // Register user
-    static registerUser(req, res) {
+////////////////////////////////////////////////////// Register user ////////////////////////////////////////////////////////////////////////////////////
+      static registerUser(req, res) {
         const result = validater.registerUserValidation(req.body);
-        if(result.error){
-           return res.status(400).send({"status":400, "error":result.error.details[0].message});
+        if(result.error) return res.status(400).send({"status":400, "error":result.error.details[0].message});
+        
+        // check if user already exists
+        const query = 'SELECT * FROM users WHERE email =$1';
+        const value=[req.body.email];
+        pool.query(query, value, (error, result) => {
+          if(result.rows.length > 0) {
+            return res.status(400).send({ "status":400, "error":"User already exists"});
+          } else {
+            
+            const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+        
+            const user = new User(req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, req.body.isAdmin);
+        
+            const query = 'INSERT INTO users(firstName,lastName, address, email, password, isAdmin) VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+            const values = [user.firstName, user.lastName, user.address,user.email, user.password, user.isAdmin];
+    
+            pool.query(query, values, (error, result) => {
+                if (error) {
+                    return res.status(400).json({status:400, error:error});
+                }else{
+                // create a token
+                const token = jwt.sign({ id: result.rows[0]['id'] }, process.env.SECRET_KEY , {
+                    expiresIn: 86400 // expires in 24 hours
+                });
+                return res.status(201).json({
+                    status: 201,
+                    data:{
+                        token:token,
+                        id: result.rows[0]['id'],
+                        email: result.rows[0]['email'],
+                        firstName: result.rows[0]['firstname'],
+                        lastName: result.rows[0]['lastname'],
+                        address: result.rows[0]['address'],
+                        status: result.rows[0]['status'],
+                        isAdmin: result.rows[0]['isadmin']
+                    }
+                });}
+            });
         }
-
-        //check if user already exists
-        const verifyUser = users.find(c => c.email === req.body.email);
-        if(verifyUser) return res.status(400).send({'error':'The user with the given email already exists.', 'status':404});
-        
-        const id = users.length + 1;
-        const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-        
-        // create a token
-        const token = jwt.sign({ id: id }, config.secret, {
-            expiresIn: 86400 // expires in 24 hours
         });
-        const user = new User(id, req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, req.body.isAdmin); 
-        users.push(user);
-        return res.status(201).json({
-                status: 201,
-                data:{
-                    token:token,
-                    id: user.id,
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    address: user.address,
-                    status: user.status,
-                    isAdmin: user.isAdmin
-                }
-          });
-    }
-
-     // Login User
-     static LoginUser(req, res) {
-        const result = validater.loginUserValidation(req.body);
-        if(result.error){
-           return res.status(400).send({"status":400, "error":result.error.details[0].message});
-        }
-        
-        const user = users.find(c => c.email === req.body.email);
-        if(!user) return res.status(404).send({'error':'The user with the given email was not found.', 'status':404});
-        
-        const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) return res.status(401).send({ 'error': 'Wrong password', 'status':401 });
-        // create a token
-        const token = jwt.sign({ id: user.id}, config.secret, {
-            expiresIn: 86400 // expires in 24 hours
-        });
-        return res.status(200).json({
-            status: 200,
-            data:{
-                token:token,
-                id: user.id,
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                address: user.address,
-                status: user.status,
-                isAdmin: user.isAdmin
-            }
-      });
-        
-    }
-        
-    // Mark User as Verified
-    static VerifyUser(req, res) {  
-        const token = req.headers['x-access-token'];
-        if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 401 });
-        
-        jwt.verify(token, config.secret, function(err, decoded) {
-        if (err) return res.status(500).send({ status: 500, error: 'Failed to authenticate token.' });
-        
-        const user = users.find(c => c.id === decoded.id);
-        if(user.isAdmin !=true) return res.status(401).send({status:401, error: 'You dont have administrative privileges to execute this route.'});
-        
-        //verify users email
-        const result = validater.verifyUserValidation(req.params);
-        if(result.error){
-           return res.status(400).send({"status":400, "error":result.error.details[0].message});
-        }
-        //Get user to be verified
-        const userToBeVerified = users.find(c => c.email === req.params.userEmail);
-        if(!userToBeVerified) return res.status(404).send({'error':'The user with the given email was not found.', 'status':404});
-        userToBeVerified.status = 'verified';
-        
-        // Return the verified user
-        return res.status(200).json({
-            status: 200,
-            data:userToBeVerified
-        });
-    });
 }
- 
+
 }
-module.exports.UserController = UserController;
-module.exports.users = users;
+export default {UserController};
