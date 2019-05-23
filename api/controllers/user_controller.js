@@ -31,7 +31,7 @@ class UserController {
             pool.query(query, values, (error, result) => {
                 if (error) {
                     return res.status(400).json({status:400, error:error});
-                }else{
+                }
                 // create a token
                 const token = jwt.sign({ id: result.rows[0]['id'] }, process.env.SECRET_KEY , {
                     expiresIn: 86400 // expires in 24 hours
@@ -48,13 +48,12 @@ class UserController {
                         status: result.rows[0]['status'],
                         isAdmin: result.rows[0]['isadmin']
                     }
-                });}
+                });
             });
         }
         });
 }
 
- 
  /////////////////////////////////////////////////////////// Login User //////////////////////////////////////////////////////////////////////
  static LoginUser(req, res) {
     const result = validater.loginUserValidation(req.body);
@@ -92,7 +91,7 @@ class UserController {
 }
 
 ////////////////////////////////////////////////// Mark User as Verified ////////////////////////////////////////////////////////////////////
-static VerifyUser(req, res) {  
+  static VerifyUser(req, res) {  
     const token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 401 });
     
@@ -130,6 +129,42 @@ static VerifyUser(req, res) {
 });
 }
 
+/////////////////////////////////////////////// Reset Password /////////////////////////////////////////////////////////////////////////////
+static resetPassword(req, res) {
+    const result = validater.resetPasswordValidation(req.body);
+    if(result.error){
+       return res.status(400).send({"status":400, "error":result.error.details[0].message});
+    }
+    
+    //check if the email already exists
+    const query = 'SELECT * FROM users WHERE email =$1';
+    const value=[req.body.email];
+    pool.query(query, value, (error, result) => {
+        if(result.rows.length > 0){
+        const passwordIsValid = bcrypt.compareSync(req.body.currentPassword, result.rows[0]['password']);
+        if(!passwordIsValid) return res.status(401).send({ 'error': 'Wrong current password provided', 'status':401 });
+        //encrypt new password
+        const hashedPassword = bcrypt.hashSync(req.body.newPassword, 8);
+        //persist new pahashedPasswordssword in the users table
+        const resetPasswordQuery = 'UPDATE users set password=$1 WHERE email =$2';
+        const newPasswordArgs=[hashedPassword,req.body.email];
+        pool.query(resetPasswordQuery, newPasswordArgs, (error, result) => {
+            return res.status(200).json({
+                status: 200,
+                message:'Your password has been successfully reset'
+            }); 
+        });
+      }else{
+      return res.status(404).send({'error':'The user with the given email was not found.', 'status':404});}
+    });   
+}
+
 
 }
+
+
+
+
+
+
 export default {UserController};

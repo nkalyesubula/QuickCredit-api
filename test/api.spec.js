@@ -48,7 +48,7 @@ describe('All Routes', () => {
   });
 
   //register user
-it('should signup a user with valid details', (done) => {
+it('should signup a admin with valid details', (done) => {
   chai.request(app)
     .post('/api/v1/auth/signup')
     .send({
@@ -104,71 +104,214 @@ it('should signup a user with valid details', (done) => {
       })
       .catch(err => done(err));
   });
- //Login Admin
- it('should login admin', (done) => {
-  chai.request(app)
-    .post('/api/v1/auth/signin')
-    .send({ email: adminEmail, password: '1234567' })
-    .then((res) => {
-      adminToken = res.body.data['token'];
-      expect(res.status).to.be.equal(200);
-      expect(res.body).to.have.property('data');
-      done();
-    })
-    .catch(error => done(error));
-});
 
-//Login User
-it('should login user', (done) => {
-  chai.request(app)
-    .post('/api/v1/auth/signin')
-    .send({ email: userEmail, password: '1234567' })
-    .then((res) => {
-      userToken = res.body.data['token'];
-      expect(res.status).to.be.equal(200);
-      expect(res.body).to.have.property('data');
-      done();
-    })
-    .catch(error => done(error));
-});
+  //Login Admin
+  it('should login admin', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signin')
+      .send({ email: adminEmail, password: '1234567' })
+      .then((res) => {
+        adminToken = res.body.data['token'];
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
 
-//don't login user with wrong details
-it('should not login user with invalid details', (done) => {
-  chai.request(app)
-    .post('/api/v1/auth/signin')
-    .send({ email: adminEmail, password: 'xxxx' })
-    .then((res) => {
-      expect(res.status).to.be.equal(401);
-      expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('status');
-      done();
-    })
-    .catch(error => done(error));
-});
+  //Login User
+  it('should login user', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signin')
+      .send({ email: userEmail, password: '1234567' })
+      .then((res) => {
+        userToken = res.body.data['token'];
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
 
- //verify user
- it('should verify a user', (done) => {
-  chai.request(app)
-    .put(`/api/v1/users/${userEmail}/verify`)
-    .set('x-access-token', adminToken)
-    .then((res) => {
-      expect(res.status).to.be.equal(200);
-      expect(res.body).to.have.property('status');
-      expect(res.body).to.have.property('data');
-      done();
-    })
-    .catch(error => done(error));
-});
-//should not verify wrong email
-it('should not verified a user successfully', (done) => {
-  chai.request(app)
-    .put('/api/v1/users/jojkiuulary@gmai.com/verify')
-    .set('x-access-token', adminToken)
-    .then((res) => {
-      expect(res.status).to.be.equal(404);
-      done();
-    })
-    .catch(error => done(error));
-});
+  //don't login user with wrong details
+  it('should not login user with invalid details', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signin')
+      .send({ email: adminEmail, password: 'xxxx' })
+      .then((res) => {
+        expect(res.status).to.be.equal(401);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        done();
+      })
+      .catch(error => done(error));
+  });
 
+  //verify user
+  it('should verify a user', (done) => {
+    chai.request(app)
+      .put(`/api/v1/users/${userEmail}/verify`)
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  //should not verify wrong email
+  it('should not verified a user successfully', (done) => {
+    chai.request(app)
+      .put('/api/v1/users/jojkiuulary@gmai.com/verify')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(404);
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should not post a loan', (done) => {
+    chai.request(app)
+      .post('/api/v1/loans')
+      .set('x-access-token', userToken)
+      .send({ amount: 'fgg', tenor: 0 })
+      .then((res) => {
+        expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('status');
+        done();
+      })
+      .catch(error => done(error));
+  });
+ 
+  it('should post a loan application', (done) => {
+    chai.request(app)
+      .post('/api/v1/loans')
+      .set('x-access-token', userToken)
+      .send({
+        "tenor" : 7,
+          "amount" : 5000
+      })
+      .then((res) => {
+        expect(res.status).to.be.equal(201);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  //approve or reject loan
+  it('should verify a loan application', (done) => {
+    chai.request(app)
+      .put('/api/v1/loans/1')
+      .send({ status: 'approved' })
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should view current loans (not fully repaid)', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans?status=approved&repaid=false')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should post a loan repayment successfully (ADMIN)', (done) => {
+    chai.request(app)
+      .post('/api/v1/loans/1/repayment')
+      .set('x-access-token', adminToken)
+      .send({ amount: 900})
+      .then((res) => {
+        expect(res.status).to.be.equal(201);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+ 
+  it('should get all loan applications', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should get a specific loan application', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans/1')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should not get a specific loan application', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans/0')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('error');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should retrieve a loan repayment', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans/1/repayment')
+      .set('x-access-token', userToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should not retrieve a loan repayment', (done) => {
+    chai.request(app)
+      .get('/api/v1/loan/0/repayments')
+      .set('x-access-token', userToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(404);
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should view current loans (fully repaid)', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans?status=approved&repaid=true')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should reject a loan', (done) => {
+    chai.request(app)
+      .put('/api/v1/loans/1')
+      .send({ status: 'rejected' })
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+ 
 });
