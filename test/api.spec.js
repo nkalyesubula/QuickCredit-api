@@ -212,4 +212,28 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
+  it('should get a specific loan application', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans/1')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
+  it('should not get a specific loan application', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans/0')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('error');
+        done();
+      })
+      .catch(error => done(error));
+  });
+
+
 });
