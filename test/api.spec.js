@@ -199,5 +199,17 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
- 
+  //approve or reject loan
+  it('should verify a loan application', (done) => {
+    chai.request(app)
+      .put('/api/v1/loans/1')
+      .send({ status: 'approved' })
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
 });
