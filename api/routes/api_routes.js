@@ -13,4 +13,5 @@ routes.post('/api/v1/auth/resetpassword', users.UserController.resetPassword);
 routes.post('/api/v1/loans', LoanController.requestLoan);
 routes.get('/api/v1/loans/:id', LoanController.getSpecificLoan);
 routes.put('/api/v1/loans/:id', LoanController.updateLoanStatus);
+routes.get('/api/v1/loans', LoanController.getAllLoans);
 export default routes;

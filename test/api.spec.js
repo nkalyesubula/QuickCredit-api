@@ -234,6 +234,16 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
-
+  it('should get all loan applications', (done) => {
+    chai.request(app)
+      .get('/api/v1/loans')
+      .set('x-access-token', adminToken)
+      .then((res) => {
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        done();
+      })
+      .catch(error => done(error));
+  });
 
 });
