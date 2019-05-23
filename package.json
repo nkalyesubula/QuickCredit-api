@@ -14,7 +14,7 @@
   "scripts": {
     "test": "npm run create && nyc --reporter=lcov --reporter=html --reporter=text mocha ./test --timeout 10000 --exit",
     
-    "start": "nodemon --exec babel-node server.js",
+    "start": "babel-node server.js",
     "create": "babel-node ./services/db createTables",
     "coverage": "nyc report --reporter=html --reporter=text _mocha",
     "test:coveralls": "nyc report --reporter=text-lcov | coveralls"
