@@ -9,7 +9,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 class LoanController {
-   // Request Loan
+   ///////////////////////////////////////////////////// Request Loan ////////////////////////////////////////////////////////////////////
    static requestLoan(req, res) {
     const token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
@@ -53,13 +53,14 @@ class LoanController {
 });
 }
 
- //Approve or reject a loan application.
+ //////////////////////////////////////////Approve or reject a loan application.//////////////////////////////////////////////////////////////////////////////////
  static updateLoanStatus(req, res) {
     const token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
     
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded)=> {
-    if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
+    const validateId = validater.loanIdValidation(req.params);
+    if(validateId.error) return res.status(400).send({"status":400, "error":validateId.error.details[0].message});
     if(!req.body.status) return res.status(400).send({'error':'No status provided'});
     if(req.body.status != 'approved' && req.body.status != 'rejected') res.status(400).send({'error':'the status should either be approved or rejected'});
     
@@ -99,14 +100,15 @@ class LoanController {
 });
 }
 
- //Get a specific loan
+ /////////////////////////////////////////////////////Get a specific loan/////////////////////////////////////////////////////////////////////////
  static getSpecificLoan(req, res) {
     const token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
     
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded)=> {
     if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
-    
+    const validateId = validater.loanIdValidation(req.params);
+    if(validateId.error) return res.status(400).send({"status":400, "error":validateId.error.details[0].message});
     //check if user is an admin
     const getUserQuery = 'SELECT * FROM users WHERE id =$1';
     const userId=[decoded.id];
@@ -126,6 +128,7 @@ class LoanController {
                     paymentInstallment: result.rows[0]['paymentinstallment'],
                     status : result.rows[0]['status'],
                     balance : result.rows[0]['balance'],
+                    repaid : result.rows[0]['repaid'],
                     interest : result.rows[0]['interest'],
                     createdOn: result.rows[0]['createdon']
                 }
@@ -136,7 +139,7 @@ class LoanController {
 }
 
 
-//Get all loans
+/////////////////////////////////////////////////////////Get all loans///////////////////////////////////////////////////////////////////////////////////////////////
 static getAllLoans(req, res) {
     const token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
@@ -181,14 +184,15 @@ static getAllLoans(req, res) {
 });
     }
 
- // Create a loan repayment record.
+ /////////////////////////////////////////////////// Create a loan repayment record ////////////////////////////////////////////////////////////////////////////
  static payLoan(req, res) {
     const token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
     
     jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
-
+        const validateId = validater.loanIdValidation(req.params);
+        if(validateId.error) return res.status(400).send({"status":400, "error":validateId.error.details[0].message});
         
         const query = 'SELECT * FROM users WHERE id =$1';
         const value=[decoded.id];
@@ -243,18 +247,18 @@ static getAllLoans(req, res) {
 });
  }
 
-  //Get loan repayment history
+  //////////////////////////////////////////////////// Get loan repayment history ////////////////////////////////////////////////////////////////////////////
   static getLoanRepaymentHistory(req, res) {
     const token = req.headers['x-access-token'];
         if (!token) return res.status(401).send({ 'error': 'No token provided', 'status': 400 });
         
         jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) return res.status(401).send({ status: 401, error: 'Failed to authenticate token.' });
-        
-        //check if user is verified
+        const validateId = validater.loanIdValidation(req.params);
+        if(validateId.error) return res.status(400).send({"status":400, "error":validateId.error.details[0].message});
+
         const query = 'SELECT * FROM users WHERE id =$1';
         const value=[decoded.id];
-    
         const getLoanQuery = 'SELECT * FROM repayments WHERE loanid =$1';
         const loanId=[parseInt(req.params.id)];
         pool.query(getLoanQuery, loanId, (error, result) => {

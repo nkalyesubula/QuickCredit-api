@@ -223,7 +223,7 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
-  it('2 should post a loan repayment successfully (ADMIN)', (done) => {
+  it('should post a loan repayment successfully (ADMIN)', (done) => {
     chai.request(app)
       .post('/api/v1/loans/1/repayment')
       .set('x-access-token', adminToken)
@@ -263,7 +263,7 @@ it('should signup a admin with valid details', (done) => {
       .get('/api/v1/loans/0')
       .set('x-access-token', adminToken)
       .then((res) => {
-        expect(res.status).to.be.equal(404);
+        expect(res.status).to.be.equal(400);
         expect(res.body).to.have.property('error');
         done();
       })
@@ -313,4 +313,5 @@ it('should signup a admin with valid details', (done) => {
       })
       .catch(error => done(error));
   });
+ 
 });
