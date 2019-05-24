@@ -10,9 +10,13 @@ dotenv.config();
 class UserController {
 ////////////////////////////////////////////////////// Register user ////////////////////////////////////////////////////////////////////////////////////
       static registerUser(req, res) {
+        
         const result = validater.registerUserValidation(req.body);
         if(result.error) return res.status(400).send({"status":400, "error":result.error.details[0].message});
-        
+        let isAdmin = false;
+        if(req.body.isAdmin) isAdmin = true;
+            
+      
         // check if user already exists
         const query = 'SELECT * FROM users WHERE email =$1';
         const value=[req.body.email];
@@ -23,7 +27,7 @@ class UserController {
             
             const hashedPassword = bcrypt.hashSync(req.body.password, 8);
         
-            const user = new User(req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, req.body.isAdmin);
+            const user = new User(req.body.email, req.body.firstName, req.body.lastName, hashedPassword, req.body.address, isAdmin);
         
             const query = 'INSERT INTO users(firstName,lastName, address, email, password, isAdmin) VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
             const values = [user.firstName, user.lastName, user.address,user.email, user.password, user.isAdmin];
@@ -107,7 +111,7 @@ class UserController {
         //check if the provided email is a valid email
         const results = validater.verifyUserValidation(req.params);
         if(results.error) return res.status(400).send({"status":400, "error":results.error.details[0].message});
-
+      
         const getverifieduser = 'SELECT * FROM users WHERE email =$1';
         const query_value =[req.params.userEmail];
         const verify_user_query = 'UPDATE users set status=$1 WHERE email =$2';
@@ -120,7 +124,16 @@ class UserController {
                 pool.query(getverifieduser, query_value, (error, result) => {
                     return res.status(200).json({
                         status: 200,
-                        data:result.rows
+                        data:{
+                            token:token,
+                            id: result.rows[0]['id'],
+                            email: result.rows[0]['email'],
+                            firstName: result.rows[0]['firstname'],
+                            lastName: result.rows[0]['lastname'],
+                            address: result.rows[0]['address'],
+                            status: result.rows[0]['status'],
+                            isAdmin: result.rows[0]['isadmin']
+                        }
                     });
                 });  
             });

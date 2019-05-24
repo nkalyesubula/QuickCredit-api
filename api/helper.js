@@ -10,7 +10,7 @@ class apiValidations{
             address: Joi.string().min(5).max(25).required(),
             email: Joi.string().email().required(),
             password: Joi.string().min(3).max(15).required(),
-            isAdmin:Joi.bool().valid(true, false).required(),
+            isAdmin:Joi.bool().valid(true, false).optional(),
           };
         return Joi.validate(postedData,schema);
     }

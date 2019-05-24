@@ -4,7 +4,9 @@ dotenv.config();
 
 const config = {
   user: process.env.DATABASE_ROOT, 
-  database: process.env.DATABASE_NAME
+  database: process.env.DATABASE_NAME,
+  password: process.env.DATABASE_PASSWORD, 
+  port: process.env.DATABASE_PORT
 };
 
 const pool = new pg.Pool(config);
@@ -70,9 +72,6 @@ pool.on('remove', () => {
 
 
 //export pool and createTables to be accessible  from an where within the application
-export {
-  createTables,
-  pool,
-};
+export default createTables
 
 require('make-runnable');
